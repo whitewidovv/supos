@@ -400,7 +400,7 @@ Orders</property>
               <placeholder/>
             </child>
             <child>
-              <widget class="GtkEntry" id="entry1">
+              <widget class="GtkEntry" id="identry">
                 <property name="visible">True</property>
                 <property name="sensitive">False</property>
                 <property name="can_focus">True</property>
@@ -510,6 +510,7 @@ Orders</property>
                 <property name="label" translatable="yes">gtk-ok</property>
                 <property name="use_stock">True</property>
                 <property name="response_id">1</property>
+                <signal name="clicked" handler="OnOkClicked"/>
               </widget>
               <packing>
                 <property name="position">1</property>

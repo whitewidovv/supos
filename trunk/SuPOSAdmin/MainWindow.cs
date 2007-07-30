@@ -174,9 +174,7 @@ namespace SuPOSAdmin
 			int result = dlg.categorydialog.Run();
 			if ( result == 1)
 			{
-				SuposDbCategory tmpcat = new SuposDbCategory( dlg.IconFileName );
-				tmpcat.Name = dlg.nameentry.Text;
-				m_DataBase.AddCategory(tmpcat);
+				m_DataBase.AddCategory( dlg.Category );
 				//update view
 				m_ClearView();
 				m_CreateCategoryView();
@@ -191,7 +189,22 @@ namespace SuPOSAdmin
 		//*********************************************
 		private void m_ModifyCategory()
 		{
-			
+			TreeIter iter;
+			TreeModel model;
+
+			if ( maintreeview.Selection.GetSelected (out model, out iter) )
+			{
+			    SuposDbCategory cat = (SuposDbCategory) model.GetValue (iter, 2);
+				//string cat = (string) model.GetValue (iter, 1);
+				Console.Write(cat.Id);
+				Console.WriteLine(cat.Name);
+			    CategoryDialog dlg = new CategoryDialog( cat );
+				int result = dlg.categorydialog.Run();
+				if ( result == 1)
+				{
+				}
+				dlg.categorydialog.Destroy();
+			}
 		}
 		//******************************************
 		// Show simple error message
