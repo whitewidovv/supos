@@ -8,12 +8,8 @@ namespace LibSupos
 	public class SuposDb
 	{	
 		private ArrayList m_Categories = null;
-		//private ArrayList m_Orders;
-		//private ArrayList m_Clients;
-		//private SuposDbTicketTemplate m_TicketTemplate;
-
 		private string m_ConnectionString = null;
-		protected NpgsqlConnection m_SuposDbConnection = null;
+		private NpgsqlConnection m_SuposDbConnection = null;
 		
 		
 		//***************************************
@@ -99,14 +95,14 @@ namespace LibSupos
 		//***********************************************
 		public bool AddCategory ( SuposDbCategory category )
 		{
-			if ( category.DataBase == null )
+			if ( category != null && category.DataBase == null )
 			{
 				category.DataBase = this;
 				NpgsqlCommand command = new NpgsqlCommand("INSERT INTO categories(name, icon) VALUES(:name, :bytesData)", m_SuposDbConnection);
 				NpgsqlParameter name_param = new NpgsqlParameter ( ":name", DbType.String );
 				NpgsqlParameter icon_param = new NpgsqlParameter ( ":bytesData", DbType.Binary );
 				name_param.Value = category.Name;
-				icon_param.Value = category.Icon.GetFileBuffer();
+				icon_param.Value = category.Icon.FileBuffer;
 				command.Parameters.Add(name_param);
 				command.Parameters.Add(icon_param);
 				try
@@ -120,11 +116,14 @@ namespace LibSupos
 				}
 				if ( m_Categories != null )
 				{
-					m_Categories.Add ( category );
+					//TODO add ID to category
+					//m_Categories.Add ( category );
 				}
 				return true;
 			}
 			return false;
 		}
+		
+		
 	}
 }

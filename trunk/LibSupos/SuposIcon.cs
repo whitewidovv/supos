@@ -13,15 +13,50 @@ namespace LibSupos
 	public class SuposIcon
 	{
 		private static int m_MaxSize = 500;
+		private byte[] m_FileBuffer = null;
 		
-		public byte[] FileBuffer = null;
 		
+		//*****************
+		// Constructor
+		//***************
 		public SuposIcon ()
-		{
-			
+		{		
 		}
 		
 		public SuposIcon( string filename )
+		{
+			Set(filename);
+		}
+		
+		public SuposIcon ( byte[] filebuffer )
+		{
+			FileBuffer = filebuffer;
+		}
+		
+		//**********************
+		//  Properties
+		//**********************
+		public byte[] FileBuffer
+		{
+			get
+			{
+				return m_FileBuffer;
+			}
+			set
+			{
+				m_FileBuffer = value;
+			}
+		}
+		
+		public void Clear()
+		{
+			FileBuffer = null;
+		}
+		
+		//*****************
+		// Methods
+		//*****************
+		public void Set (string filename )
 		{
 			if (File.Exists(filename) )
 			{
@@ -40,11 +75,6 @@ namespace LibSupos
 			}
 		}
 		
-		public SuposIcon ( byte[] filebuffer )
-		{
-			FileBuffer = filebuffer;
-		}
-		
 		public Pixbuf GetPixbuf()
 		{
 			if ( FileBuffer != null )
@@ -53,11 +83,6 @@ namespace LibSupos
 				return pb;
 			}
 			return null;
-		}
-		
-		public byte[] GetFileBuffer()
-		{
-			return FileBuffer;
 		}
 	}
 }
