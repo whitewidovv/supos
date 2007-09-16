@@ -202,6 +202,9 @@ namespace SuPOSAdmin
 				int result = dlg.categorydialog.Run();
 				if ( result == 1)
 				{
+					//update view
+					m_ClearView();
+					m_CreateCategoryView();
 				}
 				dlg.categorydialog.Destroy();
 			}
