@@ -9,7 +9,7 @@ namespace LibSupos
 	{	
 		private ArrayList m_Categories = null;
 		private string m_ConnectionString = null;
-		private NpgsqlConnection m_SuposDbConnection = null;
+		private NpgsqlConnection m_Connection = null;
 		
 		
 		//***************************************
@@ -20,14 +20,32 @@ namespace LibSupos
 			m_ConnectionString = ConnectionString;
 		}
 		
+		//***************************************
+		// Properties
+		//***************************************
+		public NpgsqlConnection Connection
+		{
+			get 
+			{
+				return m_Connection;
+			}
+		}
+		
+		public ArrayList Categories
+		{
+			get
+			{
+				return m_Categories;
+			}
+		}
 		
 		//***************************************
 		// Connect
 		//***************************************
 		public void Connect()
 		{
-			m_SuposDbConnection = new NpgsqlConnection(m_ConnectionString);
-			m_SuposDbConnection.Open();
+			m_Connection = new NpgsqlConnection(m_ConnectionString);
+			m_Connection.Open();
 		}
 		
 		
@@ -37,11 +55,11 @@ namespace LibSupos
 		//***************************************
 		public void Disconnect()
 		{
-			if ( m_SuposDbConnection == null)
+			if ( m_Connection == null)
 			{
-			    m_SuposDbConnection.Close();
+			    m_Connection.Close();
 			}
-			m_SuposDbConnection = null;
+			m_Connection = null;
 		}
 		
 		
@@ -53,16 +71,16 @@ namespace LibSupos
 		{	
 			if ( m_Categories == null)
 			{
-				NpgsqlCommand Cmd = new NpgsqlCommand( "SELECT id, name, icon FROM categories", m_SuposDbConnection );
+				NpgsqlCommand Cmd = new NpgsqlCommand( "SELECT id, name, icon FROM categories", m_Connection );
 				try
 				{
 					NpgsqlDataReader Reader = Cmd.ExecuteReader();
 					m_Categories = new ArrayList();
 					while(Reader.Read()) 
 					{	
-						SuposDbCategory tmpcat = new SuposDbCategory(  );
-						tmpcat.DataBase = this;
-						tmpcat.Id = (int)Reader["id"];
+						SuposDbCategory tmpcat = new SuposDbCategory(this, (int)Reader["id"] );
+						//tmpcat.DataBase = this;
+						//tmpcat.Id = ;
 						tmpcat.Name = Reader["name"].ToString();
 						if ( !Reader["icon"].GetType().Equals( typeof(System.DBNull) ) )
 						{
@@ -95,33 +113,11 @@ namespace LibSupos
 		//***********************************************
 		public bool AddCategory ( SuposDbCategory category )
 		{
-			if ( category != null && category.DataBase == null )
+			if ( category == null)
 			{
-				category.DataBase = this;
-				NpgsqlCommand command = new NpgsqlCommand("INSERT INTO categories(name, icon) VALUES(:name, :bytesData)", m_SuposDbConnection);
-				NpgsqlParameter name_param = new NpgsqlParameter ( ":name", DbType.String );
-				NpgsqlParameter icon_param = new NpgsqlParameter ( ":bytesData", DbType.Binary );
-				name_param.Value = category.Name;
-				icon_param.Value = category.Icon.FileBuffer;
-				command.Parameters.Add(name_param);
-				command.Parameters.Add(icon_param);
-				try
-				{
-					command.ExecuteNonQuery();
-				}
-				catch (Exception e)
-				{
-					Console.WriteLine( e.Message);
-					return false;
-				}
-				if ( m_Categories != null )
-				{
-					//TODO add ID to category
-					//m_Categories.Add ( category );
-				}
-				return true;
+				return false;
 			}
-			return false;
+			return category.InsertIntoDb(this);
 		}
 		
 		

@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
+using System.Data;
 using Gdk;
+using Npgsql;
 
 namespace LibSupos
 {
@@ -15,12 +17,19 @@ namespace LibSupos
 		
 		public SuposDbCategory()
 		{	
-			Icon = new SuposIcon();
+			m_Icon = new SuposIcon();
 		}
 
 		public SuposDbCategory( string filename )
 		{	
-			Icon = new SuposIcon( filename );
+			m_Icon = new SuposIcon( filename );
+		}
+		
+		public SuposDbCategory(SuposDb db, int id)
+		{	
+			m_DataBase = db;
+			m_Id = id;
+			m_Icon = new SuposIcon();
 		}
 		
 		public SuposDb DataBase
@@ -29,11 +38,6 @@ namespace LibSupos
 			{
 				return m_DataBase;
 			}
-			
-			set
-			{
-				m_DataBase = value;
-			}
 		}
 		
 		public int Id
@@ -41,11 +45,6 @@ namespace LibSupos
 			get 
 			{
 				return m_Id;
-			}
-			
-			set
-			{
-				m_Id = value;
 			}
 		}
 		
@@ -68,19 +67,47 @@ namespace LibSupos
 			{
 				return m_Icon;
 			}
-			
-			set
-			{
-				m_Icon = value;
-			}
 		}
 		
-		/*
-		public bool WriteChangeToDb ()
+		public bool InsertIntoDb(SuposDb db)
 		{
-			return false;
+			if ( m_DataBase != null || m_Id !=0 || db == null)
+			{
+				return false;
+			}
+			// Get next ID
+			NpgsqlCommand command = new NpgsqlCommand("SELECT nextval('categories_id_seq')", db.Connection);
+			try
+			{
+				m_Id = (int)(Int64)command.ExecuteScalar();
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine( e.Message);
+				return false;
+			}
+			command.Dispose();
+			// Insert row
+			command = new NpgsqlCommand("INSERT INTO categories(id, name, icon) VALUES(currval('categories_id_seq'), :name, :bytesData)", db.Connection);
+			NpgsqlParameter name_param = new NpgsqlParameter ( ":name", DbType.String );
+			NpgsqlParameter icon_param = new NpgsqlParameter ( ":bytesData", DbType.Binary );
+			name_param.Value = Name;
+			icon_param.Value = Icon.FileBuffer;
+			command.Parameters.Add(name_param);
+			command.Parameters.Add(icon_param);
+			try
+			{
+				command.ExecuteNonQuery();
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine( e.Message);
+				return false;
+			}
+			db.Categories.Add(this);
+			return true;
+			
 		}
-		*/
 		
 		public bool Remove()
 		{
