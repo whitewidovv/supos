@@ -15,6 +15,9 @@ namespace LibSupos
 		
 		//private ArrayList m_Products;
 		
+		//******************************
+		// Constructors
+		//******************************
 		public SuposDbCategory()
 		{	
 			m_Icon = new SuposIcon();
@@ -32,6 +35,9 @@ namespace LibSupos
 			m_Icon = new SuposIcon();
 		}
 		
+		//*************************
+		// Properties
+		//*************************
 		public SuposDb DataBase
 		{
 			get 
@@ -69,6 +75,9 @@ namespace LibSupos
 			}
 		}
 		
+		//******************************************
+		// Add (insert) the category to a data base
+		//******************************************
 		public bool InsertIntoDb(SuposDb db)
 		{
 			if ( m_DataBase != null || m_Id !=0 || db == null)
@@ -88,11 +97,11 @@ namespace LibSupos
 			}
 			command.Dispose();
 			// Insert row
-			command = new NpgsqlCommand("INSERT INTO categories(id, name, icon) VALUES(currval('categories_id_seq'), :name, :bytesData)", db.Connection);
+			command = new NpgsqlCommand("INSERT INTO categories(id, name, icon) VALUES(currval('categories_id_seq'), :name, :icon)", db.Connection);
 			NpgsqlParameter name_param = new NpgsqlParameter ( ":name", DbType.String );
-			NpgsqlParameter icon_param = new NpgsqlParameter ( ":bytesData", DbType.Binary );
-			name_param.Value = Name;
-			icon_param.Value = Icon.FileBuffer;
+			NpgsqlParameter icon_param = new NpgsqlParameter ( ":icon", DbType.Binary );
+			name_param.Value = m_Name;
+			icon_param.Value = m_Icon.FileBuffer;
 			command.Parameters.Add(name_param);
 			command.Parameters.Add(icon_param);
 			try
@@ -109,10 +118,34 @@ namespace LibSupos
 			
 		}
 		
-		public bool Remove()
+		//*****************************
+		// Write change in DB
+		//*****************************
+		public bool ApplyChange()
 		{
-			return false;
+			NpgsqlCommand command = new NpgsqlCommand("UPDATE categories SET name=:name, icon=:icon WHERE id=:id", m_DataBase.Connection);
+			NpgsqlParameter name_param = new NpgsqlParameter ( ":name", DbType.String );
+			NpgsqlParameter icon_param = new NpgsqlParameter ( ":icon", DbType.Binary );
+			NpgsqlParameter id_param = new NpgsqlParameter ( ":id", DbType.Int64 );
+			name_param.Value = m_Name;
+			icon_param.Value = m_Icon.FileBuffer;
+			id_param.Value = m_Id;
+			command.Parameters.Add(name_param);
+			command.Parameters.Add(icon_param);
+			command.Parameters.Add(id_param);
+			try
+			{
+				command.ExecuteNonQuery();
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine( e.Message );
+				return false;
+			}
+			return true;
 		}
+		
+		
 	}
 
 }

@@ -119,6 +119,27 @@ namespace LibSupos
 			return category.InsertIntoDb(this);
 		}
 		
+		//*****************************
+		// Remove the category from DB 
+		//*****************************
+		public bool Remove(SuposDbCategory category)
+		{
+			NpgsqlCommand command = new NpgsqlCommand("DELETE FROM categories WHERE id=:id", m_Connection);
+			NpgsqlParameter id_param = new NpgsqlParameter ( ":id", DbType.Int64 );
+			id_param.Value = category.Id;
+			command.Parameters.Add(id_param);
+			try
+			{
+				command.ExecuteNonQuery();
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine( e.Message );
+				return false;
+			}
+			m_Categories.Remove(category);
+			return true;
+		}
 		
 	}
 }
