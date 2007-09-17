@@ -69,34 +69,33 @@ namespace LibSupos
 		//***************************************
 		public bool LoadCategories()
 		{	
-			if ( m_Categories == null)
+			if ( m_Categories != null)
 			{
-				NpgsqlCommand Cmd = new NpgsqlCommand( "SELECT id, name, icon FROM categories", m_Connection );
-				try
-				{
-					NpgsqlDataReader Reader = Cmd.ExecuteReader();
-					m_Categories = new ArrayList();
-					while(Reader.Read()) 
-					{	
-						SuposDbCategory tmpcat = new SuposDbCategory(this, (int)Reader["id"] );
-						//tmpcat.DataBase = this;
-						//tmpcat.Id = ;
-						tmpcat.Name = Reader["name"].ToString();
-						if ( !Reader["icon"].GetType().Equals( typeof(System.DBNull) ) )
-						{
-							tmpcat.Icon.FileBuffer = (byte[])Reader["icon"];
-						}
-						m_Categories.Add(tmpcat);
-					}
-				}
-				catch (Exception e)
-				{
-					Console.WriteLine ( e.Message );
-					return false;
-				}
-				return true;
+				return false;
 			}
-			return false;
+			NpgsqlCommand Cmd = new NpgsqlCommand( "SELECT id, name, icon FROM categories", m_Connection );
+			NpgsqlDataReader reader;
+			try
+			{
+				reader = Cmd.ExecuteReader();
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine ( e.Message );
+				return false;
+			}
+			m_Categories = new ArrayList();
+			while(reader.Read()) 
+			{	
+				SuposDbCategory tmpcat = new SuposDbCategory(this, (int)reader["id"] );
+				tmpcat.Name = reader["name"].ToString();
+				if ( !reader["icon"].GetType().Equals( typeof(System.DBNull) ) )
+				{
+					tmpcat.Icon.FileBuffer = (byte[])reader["icon"];
+				}
+				m_Categories.Add(tmpcat);
+			}
+			return true;
 		}
 		
 
