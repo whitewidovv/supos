@@ -78,13 +78,15 @@ namespace SuPOSAdmin
 			int result = dlg.Run();
 			if ( (ResponseType)result == ResponseType.Ok )
 			{
-				iconpixbuf = new Pixbuf ( dlg.Filename, 50, 50 );
-				iconimage.Pixbuf = iconpixbuf;
-				iconbutton.Add(iconimage);
-				iconimage.Show();
 				if ( Category != null )
 				{
-					Category.Icon.Set( dlg.Filename );
+					if(Category.Icon.Set(dlg.Filename) )
+					{
+						iconpixbuf = new Pixbuf ( dlg.Filename, 50, 50 );
+						iconimage.Pixbuf = iconpixbuf;
+						iconbutton.Add(iconimage);
+						iconimage.Show();
+					}
 				}
 			}
 			if ( (ResponseType)result == ResponseType.No )
