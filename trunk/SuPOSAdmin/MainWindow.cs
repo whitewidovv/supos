@@ -41,6 +41,7 @@ namespace SuPOSAdmin
 			m_StatusContextId = statusbar.GetContextId("ActionMsg");
 			statusbar.Push( m_StatusContextId, "Disconnected");
 			combobox.Sensitive = false;
+			maintreeview.Selection.Mode = Gtk.SelectionMode.Multiple;
 			m_Config = new Config();
 		}
 		
@@ -191,24 +192,45 @@ namespace SuPOSAdmin
 		{
 			TreeIter iter;
 			TreeModel model;
-
-			if ( maintreeview.Selection.GetSelected (out model, out iter) )
-			{
+			TreePath[] path_array = maintreeview.Selection.GetSelectedRows(out model);
+			
+			if ( path_array.Length>0  )
+			{		
+				model.GetIter(out iter, path_array[0]);
 			    SuposDbCategory cat = (SuposDbCategory) model.GetValue (iter, 2);
-				//string cat = (string) model.GetValue (iter, 1);
-				Console.Write(cat.Id);
-				Console.WriteLine(cat.Name);
 			    CategoryDialog dlg = new CategoryDialog( cat );
 				int result = dlg.categorydialog.Run();
 				if ( result == 1)
 				{
-					//update view
+					cat.ApplyChange();
 					m_ClearView();
 					m_CreateCategoryView();
 				}
 				dlg.categorydialog.Destroy();
 			}
 		}
+
+		//*********************************************
+		// 
+		//*********************************************
+		private void m_DeleteCategory()
+		{
+			TreeIter iter;
+			TreeModel model;
+			TreePath[] path_array = maintreeview.Selection.GetSelectedRows(out model);
+			
+			foreach ( TreePath path in path_array )
+			{		
+				model.GetIter(out iter, path);
+				SuposDbCategory cat = (SuposDbCategory) model.GetValue(iter, 2);
+				//Console.WriteLine(cat.Name);
+			    m_DataBase.Remove(cat);
+			}
+			//update view
+			m_ClearView();
+			m_CreateCategoryView();
+		}
+		
 		//******************************************
 		// Show simple error message
 		//******************************************
@@ -269,9 +291,7 @@ namespace SuPOSAdmin
 					Console.WriteLine("Orders");
 					m_ClearView();
 					break;
-				
 				}
-				
 			}
 		}
 		
@@ -286,7 +306,6 @@ namespace SuPOSAdmin
 				Console.WriteLine("AddProducts");
 				break;
 			}
-			
 		}
 		
 		private void OnPropertiesClicked (object sender, EventArgs a) 
@@ -299,8 +318,19 @@ namespace SuPOSAdmin
 			case 1:
 				Console.WriteLine("ModProducts");
 				break;
-				/**/
-				
+			}
+		}
+		
+		private void OnDeleteClicked (object sender, EventArgs a) 
+		{
+			switch (combobox.Active)
+			{
+			case 0:
+				m_DeleteCategory();
+				break;
+			case 1:
+				Console.WriteLine("DelProducts");
+				break;
 			}
 		}
 	}
