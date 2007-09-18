@@ -151,7 +151,8 @@ namespace SuPOSAdmin
 				CategoryNameColumn.PackStart(CategoryNameCell, true);
 				CategoryIconColumn.AddAttribute (CategoryIconCell, "pixbuf", 0);
 				CategoryNameColumn.AddAttribute (CategoryNameCell, "text", 1);
-				
+				//CategoryIconColumn.SortColumnId =0;
+				CategoryNameColumn.SortColumnId =1;
 				ArrayList categories = m_DataBase.GetCategories();
 				if ( categories != null )
 				{
