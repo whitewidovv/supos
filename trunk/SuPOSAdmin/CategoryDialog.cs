@@ -32,6 +32,8 @@ namespace SuPOSAdmin
 			Glade.XML gxml = new Glade.XML (null, "suposadmin.glade", "categorydialog", "suposadmin");
 			gxml.Autoconnect (this);
 			Category  = new SuposDbCategory();
+			iconbutton.Add(iconimage);
+			iconimage.Show();
 		}
 		
 		public CategoryDialog(SuposDbCategory category)
@@ -47,14 +49,15 @@ namespace SuPOSAdmin
 				iconimage.Pixbuf = Category.Icon.GetPixbuf();
 				if ( iconimage.Pixbuf != null)
 					iconimage.Pixbuf = iconimage.Pixbuf.ScaleSimple(50, 50, InterpType.Bilinear );
-				iconbutton.Add(iconimage);
-				iconimage.Show();
+				
 				
 			}
 			else
 			{
 				Category = new SuposDbCategory();
 			}
+			iconbutton.Add(iconimage);
+			iconimage.Show();
 		}
 		
 		//*********************************
@@ -84,19 +87,13 @@ namespace SuPOSAdmin
 					{
 						iconpixbuf = new Pixbuf ( dlg.Filename, 50, 50 );
 						iconimage.Pixbuf = iconpixbuf;
-						iconbutton.Add(iconimage);
-						iconimage.Show();
 					}
 				}
 			}
 			if ( (ResponseType)result == ResponseType.No )
 			{
-				if ( iconimage != null)
-				{
-					iconbutton.Remove ( iconimage );
-				}
-				iconimage = null;
-				
+				iconimage.Pixbuf.Dispose(); 
+				iconimage.Pixbuf = null;	
 				if ( Category != null)
 				{
 					Category.Icon.Clear();

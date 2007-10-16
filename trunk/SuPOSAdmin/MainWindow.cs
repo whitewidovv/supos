@@ -22,11 +22,12 @@ namespace SuPOSAdmin
 		private SuposDb m_DataBase = null;
 		private Config m_Config = null;
 		private uint m_StatusContextId;
-		private ListStore m_MainStore = null;
+		
 		[Widget] protected Gtk.Window mainwindow;
 		[Widget] protected Gtk.Statusbar statusbar;
-		[Widget] protected Gtk.ComboBox combobox;
-		[Widget] protected Gtk.TreeView maintreeview;
+		[Widget] protected Gtk.VBox stockvbox;
+		[Widget] protected Gtk.ToolButton toolbuttondisconnect;
+		[Widget] protected Gtk.ToolButton toolbuttonconnect;
 		
 		
 		//****************************************
@@ -40,8 +41,8 @@ namespace SuPOSAdmin
 			m_StatusContextId = statusbar.GetContextId("StatusMsg");
 			m_StatusContextId = statusbar.GetContextId("ActionMsg");
 			statusbar.Push( m_StatusContextId, "Disconnected");
-			combobox.Sensitive = false;
-			maintreeview.Selection.Mode = Gtk.SelectionMode.Multiple;
+			stockvbox.Sensitive = false;
+			toolbuttondisconnect.Sensitive = false;
 			m_Config = new Config();
 		}
 		
@@ -89,9 +90,13 @@ namespace SuPOSAdmin
 				}
 				// Connection OK
 				statusbar.Push( m_StatusContextId, "Connected");
-				m_DataBase.LoadCategories(); // TODO check result
-				combobox.Sensitive = true;
-				combobox.Active = 0;
+				toolbuttondisconnect.Sensitive = true;
+				toolbuttonconnect.Sensitive = false;
+				if( m_DataBase.LoadCategories() )
+				{
+					stockvbox.Sensitive = true;
+				}
+				
 			}
 		}
 		
@@ -106,131 +111,14 @@ namespace SuPOSAdmin
 				m_DataBase = null;
 			}
 			statusbar.Push( m_StatusContextId, "Disconnected");
-			m_ClearView();
-			combobox.Active = -1;
-			combobox.Sensitive = false;
+			toolbuttondisconnect.Sensitive = false;
+			toolbuttonconnect.Sensitive = true;
+			stockvbox.Sensitive = false;
+			//m_ClearView();
 		}
 		
 	
-		//******************************************
-		// Clear MainTreeView
-		//******************************************
-		private void m_ClearView()
-		{
-			foreach ( TreeViewColumn c in maintreeview.Columns)
-			{
-				maintreeview.RemoveColumn(c);
-				c.Destroy();
-			}
-			if ( m_MainStore != null)
-			{
-				m_MainStore.Clear();
-				m_MainStore.Dispose();
-			}
-			m_MainStore = null;
-		}
 		
-		//******************************************
-		// Categories in MainTreeView
-		//******************************************
-		private void m_CreateCategoryView()
-		{
-			if ( m_DataBase != null)
-			{
-				m_MainStore = new ListStore ( typeof(Gdk.Pixbuf), typeof(string), typeof(SuposDbCategory) );
-				maintreeview.Model = m_MainStore;
-				Gtk.TreeViewColumn CategoryIconColumn = new Gtk.TreeViewColumn ();
-				Gtk.TreeViewColumn CategoryNameColumn = new Gtk.TreeViewColumn ();
-				CategoryIconColumn.Title = "Icon";
-				CategoryNameColumn.Title = "Name";
-				maintreeview.AppendColumn (CategoryIconColumn);
-				maintreeview.AppendColumn (CategoryNameColumn);
-				CellRendererPixbuf CategoryIconCell = new Gtk.CellRendererPixbuf ();
-				CellRendererText CategoryNameCell = new Gtk.CellRendererText ();
-				CategoryIconColumn.PackStart(CategoryIconCell, true);
-				CategoryNameColumn.PackStart(CategoryNameCell, true);
-				CategoryIconColumn.AddAttribute (CategoryIconCell, "pixbuf", 0);
-				CategoryNameColumn.AddAttribute (CategoryNameCell, "text", 1);
-				//CategoryIconColumn.SortColumnId =0;
-				CategoryNameColumn.SortColumnId =1;
-				ArrayList categories = m_DataBase.GetCategories();
-				if ( categories != null )
-				{
-					foreach (SuposDbCategory category in categories )
-					{
-						Pixbuf pb = category.Icon.GetPixbuf();
-						if ( pb != null )
-								pb = pb.ScaleSimple( 50, 50, Gdk.InterpType.Bilinear );
-						m_MainStore.AppendValues(pb, category.Name, category);
-					}
-				}
-			}
-		}
-		
-		//********************************************
-		// 
-		//********************************************
-		private void m_AddCategory()
-		{
-			CategoryDialog dlg = new CategoryDialog();
-			int result = dlg.categorydialog.Run();
-			if ( result == 1)
-			{
-				m_DataBase.AddCategory( dlg.Category );
-				//update view
-				m_ClearView();
-				m_CreateCategoryView();
-				
-			}
-			dlg.categorydialog.Destroy();
-			
-		}
-		
-		//*********************************************
-		// 
-		//*********************************************
-		private void m_ModifyCategory()
-		{
-			TreeIter iter;
-			TreeModel model;
-			TreePath[] path_array = maintreeview.Selection.GetSelectedRows(out model);
-			
-			if ( path_array.Length>0  )
-			{		
-				model.GetIter(out iter, path_array[0]);
-			    SuposDbCategory cat = (SuposDbCategory) model.GetValue (iter, 2);
-			    CategoryDialog dlg = new CategoryDialog( cat );
-				int result = dlg.categorydialog.Run();
-				if ( result == 1)
-				{
-					cat.ApplyChange();
-					m_ClearView();
-					m_CreateCategoryView();
-				}
-				dlg.categorydialog.Destroy();
-			}
-		}
-
-		//*********************************************
-		// 
-		//*********************************************
-		private void m_DeleteCategory()
-		{
-			TreeIter iter;
-			TreeModel model;
-			TreePath[] path_array = maintreeview.Selection.GetSelectedRows(out model);
-			
-			foreach ( TreePath path in path_array )
-			{		
-				model.GetIter(out iter, path);
-				SuposDbCategory cat = (SuposDbCategory) model.GetValue(iter, 2);
-				//Console.WriteLine(cat.Name);
-			    m_DataBase.Remove(cat);
-			}
-			//update view
-			m_ClearView();
-			m_CreateCategoryView();
-		}
 		
 		//******************************************
 		// Show simple error message
@@ -257,7 +145,7 @@ namespace SuPOSAdmin
 			a.RetVal = true;
 		}
 		
-		private void OnMenuQuitActivated (object sender, EventArgs a) 
+		private void OnExitClicked (object sender, EventArgs a) 
 		{
 			m_Disconnect();
 			Application.Quit ();
@@ -273,66 +161,12 @@ namespace SuPOSAdmin
 			m_Disconnect();
 		}
 		
-		private void OnVueSelectionChanged (object sender, EventArgs a)
+		private void OnCategoriesClicked (object sender, EventArgs a) 
 		{
-			if ( sender.GetType().Equals( typeof(Gtk.ComboBox) ) )
-			{
-				ComboBox box = (ComboBox) sender;
-				switch (box.Active)
-				{
-				case 0:
-					m_ClearView();
-					m_CreateCategoryView();
-					break;
-				case 1:
-					Console.WriteLine("Products");
-					m_ClearView();
-					break;
-				case 2:
-					Console.WriteLine("Orders");
-					m_ClearView();
-					break;
-				}
-			}
+			// TODO check and do not open window twice
+			CategoriesWindow categorywindow = new CategoriesWindow(m_DataBase);
+			categorywindow.Show();
 		}
 		
-		private void OnAddClicked (object sender, EventArgs a) 
-		{
-			switch (combobox.Active)
-			{
-			case 0:
-				m_AddCategory();
-				break;
-			case 1:
-				Console.WriteLine("AddProducts");
-				break;
-			}
-		}
-		
-		private void OnPropertiesClicked (object sender, EventArgs a) 
-		{
-			switch (combobox.Active)
-			{
-			case 0:
-				m_ModifyCategory();
-				break;
-			case 1:
-				Console.WriteLine("ModProducts");
-				break;
-			}
-		}
-		
-		private void OnDeleteClicked (object sender, EventArgs a) 
-		{
-			switch (combobox.Active)
-			{
-			case 0:
-				m_DeleteCategory();
-				break;
-			case 1:
-				Console.WriteLine("DelProducts");
-				break;
-			}
-		}
 	}
 }
