@@ -113,6 +113,7 @@ namespace LibSupos
 				Console.WriteLine( e.Message);
 				return false;
 			}
+			this.m_DataBase = db;
 			db.Categories.Add(this);
 			return true;
 			
