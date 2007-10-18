@@ -7,7 +7,9 @@ namespace LibSupos
 {
 	public class SuposDb
 	{	
+		// UNDONE Detect disconnections 
 		private ArrayList m_Categories = null;
+		private ArrayList m_Taxes = null;
 		private string m_ConnectionString = null;
 		private NpgsqlConnection m_Connection = null;
 		
@@ -36,6 +38,14 @@ namespace LibSupos
 			get
 			{
 				return m_Categories;
+			}
+		}
+		
+		public ArrayList Taxes
+		{
+			get
+			{
+				return m_Taxes;
 			}
 		}
 		
@@ -87,7 +97,7 @@ namespace LibSupos
 			m_Categories = new ArrayList();
 			while(reader.Read()) 
 			{	
-				SuposDbCategory tmpcat = new SuposDbCategory(this, (int)reader["id"] );
+				SuposCategory tmpcat = new SuposCategory(this, (int)reader["id"] );
 				tmpcat.Name = reader["name"].ToString();
 				if ( !reader["icon"].GetType().Equals( typeof(System.DBNull) ) )
 				{
@@ -110,7 +120,7 @@ namespace LibSupos
 		//***********************************************
 		// Add a category to DB
 		//***********************************************
-		public bool AddCategory ( SuposDbCategory category )
+		public bool AddCategory ( SuposCategory category )
 		{
 			if ( category == null)
 			{
@@ -122,7 +132,7 @@ namespace LibSupos
 		//*****************************
 		// Remove the category from DB 
 		//*****************************
-		public bool Remove(SuposDbCategory category)
+		public bool Remove(SuposCategory category)
 		{
 			NpgsqlCommand command = new NpgsqlCommand("DELETE FROM categories WHERE id=:id", m_Connection);
 			NpgsqlParameter id_param = new NpgsqlParameter ( ":id", DbType.Int64 );
