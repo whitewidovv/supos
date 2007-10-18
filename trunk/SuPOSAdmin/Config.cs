@@ -1,4 +1,4 @@
-// /home/xavier/Projects/SuPOS/SuPOSAdmin/Config.cs created with MonoDevelop
+// /home/xavier/Projects/SuPOS/SuposAdmin/Config.cs created with MonoDevelop
 // User: xavier at 12:57 25/07/2007
 //
 // To change standard headers go to Edit->Preferences->Coding->Standard Headers
@@ -7,7 +7,7 @@
 using System;
 using Nini.Config;
 
-namespace SuPOSAdmin
+namespace SuposAdmin
 {
 	
 	
@@ -49,7 +49,7 @@ namespace SuPOSAdmin
 			string db_str = m_DbConfigSource.Configs["Server"].Get("Database");
 			if ( srv_str.Length <= 0 || db_str.Length <= 0 )
 			{
-				Console.WriteLine("No Configurtion for SERVER or DATABASE !");
+				Console.WriteLine("No Configuration for SERVER or DATABASE !");
 				return null;
 			}
 			tmp_str += "Server=" + srv_str + ";";
@@ -72,7 +72,7 @@ namespace SuPOSAdmin
 			}
 			else
 				m_IsUserConfigured = false;
-			// TODO support more argument	
+			// UNDONE support more argument	
 			return tmp_str;
 		}
 		

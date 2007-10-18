@@ -1,4 +1,4 @@
-// /home/xavier/Projects/SuPOS/SuPOSAdmin/MainWindow.cs created with MonoDevelop
+// /home/xavier/Projects/SuPOS/SuposAdmin/MainWindow.cs created with MonoDevelop
 // User: xavier at 23:09 24/07/2007
 //
 // To change standard headers go to Edit->Preferences->Coding->Standard Headers
@@ -13,7 +13,7 @@ using Glade;
 
 using LibSupos;
 
-namespace SuPOSAdmin
+namespace SuposAdmin
 {
 	
 	
@@ -23,11 +23,11 @@ namespace SuPOSAdmin
 		private Config m_Config = null;
 		private uint m_StatusContextId;
 		
-		[Widget] protected Gtk.Window mainwindow;
-		[Widget] protected Gtk.Statusbar statusbar;
-		[Widget] protected Gtk.VBox stockvbox;
-		[Widget] protected Gtk.ToolButton toolbuttondisconnect;
-		[Widget] protected Gtk.ToolButton toolbuttonconnect;
+		[Widget] private Gtk.Window mainwindow;
+		[Widget] private Gtk.Statusbar statusbar;
+		[Widget] private Gtk.VBox stockvbox;
+		[Widget] private Gtk.ToolButton toolbuttondisconnect;
+		[Widget] private Gtk.ToolButton toolbuttonconnect;
 		
 		
 		//****************************************
@@ -143,6 +143,7 @@ namespace SuPOSAdmin
 			m_Disconnect();
 			Application.Quit ();
 			a.RetVal = true;
+			Console.WriteLine("MW");
 		}
 		
 		private void OnExitClicked (object sender, EventArgs a) 
@@ -163,10 +164,16 @@ namespace SuPOSAdmin
 		
 		private void OnCategoriesClicked (object sender, EventArgs a) 
 		{
-			// TODO check and do not open window twice
-			CategoriesWindow categorywindow = new CategoriesWindow(m_DataBase);
-			categorywindow.Show();
+			// UNDONE show only one windows
+			CategoriesWindow win = new CategoriesWindow(m_DataBase);
+			win.Show();
 		}
 		
+		private void OnTaxesClicked (object sender, EventArgs a) 
+		{
+			// UNDONE show only one windows
+			TaxesWindow win = new TaxesWindow(m_DataBase);
+			win.Show();
+		}
 	}
 }

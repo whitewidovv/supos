@@ -1,4 +1,4 @@
-// /home/xavier/Projects/SuPOS/SuPOSAdmin/CategoriesWindows.cs
+// /home/xavier/Projects/SuPOS/SuposAdmin/CategoriesWindows.cs
 // User: xavier at 12:20 11/10/2007
 //
 
@@ -10,7 +10,7 @@ using Gtk;
 using Glade;
 using LibSupos;
 
-namespace SuPOSAdmin
+namespace SuposAdmin
 {
 	
 	
@@ -18,8 +18,8 @@ namespace SuPOSAdmin
 	{
 		private SuposDb m_DataBase = null;
 		private ListStore m_Store = null;
-		[Widget] protected Gtk.Window categorieswindow;
-		[Widget] protected Gtk.TreeView categoriestreeview;
+		[Widget] private Gtk.Window categorieswindow;
+		[Widget] private Gtk.TreeView categoriestreeview;
 		
 		enum CategoryColumn {Id, Icon, Name, Data};
 		
@@ -37,7 +37,7 @@ namespace SuPOSAdmin
 			
 			categoriestreeview.Selection.Mode = Gtk.SelectionMode.Multiple;
 			
-			m_Store = new ListStore ( typeof(string), typeof(Gdk.Pixbuf), typeof(string), typeof(SuposDbCategory) );
+			m_Store = new ListStore ( typeof(string), typeof(Gdk.Pixbuf), typeof(string), typeof(SuposCategory) );
 			categoriestreeview.Model = m_Store;
 			Gtk.TreeViewColumn CategoryIdColumn = new Gtk.TreeViewColumn ();
 			Gtk.TreeViewColumn CategoryIconColumn = new Gtk.TreeViewColumn ();
@@ -59,7 +59,6 @@ namespace SuPOSAdmin
 			CategoryNameColumn.AddAttribute (CategoryNameCell, "text", (int)CategoryColumn.Name );
 			CategoryIdColumn.SortColumnId = (int)CategoryColumn.Id;
 			CategoryNameColumn.SortColumnId = (int)CategoryColumn.Name;
-			
 			m_CreateCategoryView();
 		}
 		
@@ -68,7 +67,7 @@ namespace SuPOSAdmin
 		//****************************************
 		public void Show()
 		{
-			categorieswindow.Show();
+			categorieswindow.ShowAll();
 		}
 		
 		//******************************************
@@ -92,7 +91,7 @@ namespace SuPOSAdmin
 				ArrayList categories = m_DataBase.GetCategories();
 				if ( categories != null )
 				{
-					foreach (SuposDbCategory category in categories )
+					foreach (SuposCategory category in categories )
 					{
 						Pixbuf pb = category.Icon.GetPixbuf();
 						if ( pb != null )
@@ -110,16 +109,20 @@ namespace SuPOSAdmin
 		private void OnAddClicked (object sender, EventArgs a)
 		{
 			CategoryDialog dlg = new CategoryDialog();
-			int result = dlg.categorydialog.Run();
-			if ( result == 1)
+			int result = dlg.Run();
+			if ( (ResponseType)result == ResponseType.Ok)
 			{
+				TreeIter iter;
 				m_DataBase.AddCategory( dlg.Category );
-				//update view
-				m_ClearView();
-				m_CreateCategoryView();
-				
+				// Update view
+				Pixbuf pb = dlg.Category.Icon.GetPixbuf();
+				if ( pb != null )
+						pb = pb.ScaleSimple( 50, 50, Gdk.InterpType.Bilinear );
+				iter = m_Store.AppendValues(dlg.Category.Id.ToString(), pb, dlg.Category.Name, dlg.Category);
+				// Select new inserted row
+				categoriestreeview.Selection.SelectIter( iter );
 			}
-			dlg.categorydialog.Destroy();
+			dlg.Destroy();
 			
 		}
 		
@@ -133,39 +136,58 @@ namespace SuPOSAdmin
 			if ( path_array.Length>0  )
 			{		
 				model.GetIter(out iter, path_array[0]);
-			    SuposDbCategory cat = (SuposDbCategory) model.GetValue (iter, (int)CategoryColumn.Data );
+			    SuposCategory cat = (SuposCategory) model.GetValue (iter, (int)CategoryColumn.Data );
 			    CategoryDialog dlg = new CategoryDialog( cat );
-				int result = dlg.categorydialog.Run();
-				if ( result == 1)
+				int result = dlg.Run();
+				if ( (ResponseType)result == ResponseType.Ok)
 				{
 					cat.ApplyChange();
-					//TODO clean update of the view
-					m_ClearView();
-					m_CreateCategoryView();
+					// Update of the row
+					model.SetValue(iter, (int)CategoryColumn.Id, cat.Id.ToString() );
+					model.SetValue(iter, (int)CategoryColumn.Name, cat.Name);
+					Pixbuf pb = cat.Icon.GetPixbuf();
+					if ( pb != null )
+					{
+						pb = pb.ScaleSimple( 50, 50, Gdk.InterpType.Bilinear );
+						model.SetValue(iter, (int)CategoryColumn.Icon, pb);
+					}
+					model.EmitRowChanged(path_array[0], iter);
 				}
-				dlg.categorydialog.Destroy();
+				dlg.Destroy();
 			}
 		}
 
 	
+		private void OnRefreshClicked (object sender, EventArgs a)
+		{
+			m_ClearView();
+			m_CreateCategoryView();
+		}
+		
+		
 		private void OnDeleteClicked (object sender, EventArgs a)
 		{
 			TreeIter iter;
 			TreeModel model;
+			ArrayList rowlist = new ArrayList();
 			TreePath[] path_array = categoriestreeview.Selection.GetSelectedRows(out model);
-			
 			foreach ( TreePath path in path_array )
 			{		
 				model.GetIter(out iter, path);
-				SuposDbCategory cat = (SuposDbCategory) model.GetValue(iter, (int)CategoryColumn.Data );
-				//Console.WriteLine(cat.Name);
+				SuposCategory cat = (SuposCategory) model.GetValue(iter, (int)CategoryColumn.Data );
 			    m_DataBase.Remove(cat);
+				rowlist.Add( new TreeRowReference(model, path) ); //mark row for deletion
 			}
-			//update view
-			m_ClearView();
-			m_CreateCategoryView();
+			// Delete marked rows
+			ListStore store = (ListStore)model;
+			foreach ( TreeRowReference row in rowlist)
+			{
+				store.GetIter(out iter, row.Path);
+				store.Remove(ref iter);
+			}
 		}		
+		
 		
 	} // public class CategoriesWindows
 		
-} // namespace SuPOSAdmin
+} // namespace SuposAdmin

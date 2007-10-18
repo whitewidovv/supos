@@ -1,4 +1,4 @@
-// /home/xavier/Projects/SuPOS/SuPOSAdmin/LoginDialog.cs created with MonoDevelop
+// /home/xavier/Projects/SuPOS/SuposAdmin/LoginDialog.cs created with MonoDevelop
 // User: xavier at 17:31 25/07/2007
 //
 // To change standard headers go to Edit->Preferences->Coding->Standard Headers
@@ -9,7 +9,7 @@ using Mono.Unix;
 using Gtk;
 using Glade;
 
-namespace SuPOSAdmin
+namespace SuposAdmin
 {
 	public class LoginDialog
 	{

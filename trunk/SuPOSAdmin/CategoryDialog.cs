@@ -1,4 +1,4 @@
-// /home/xavier/Projects/SuPOS/SuPOSAdmin/CategoryDialog.cs created with MonoDevelop
+// /home/xavier/Projects/SuPOS/SuposAdmin/CategoryDialog.cs created with MonoDevelop
 // User: xavier at 15:29 26/07/2007
 //
 // To change standard headers go to Edit->Preferences->Coding->Standard Headers
@@ -12,18 +12,20 @@ using Gdk;
 
 using LibSupos;
 
-namespace SuPOSAdmin
+namespace SuposAdmin
 {
 	public class CategoryDialog
 	{
-		private Gtk.Image iconimage = new Gtk.Image();
-		private Pixbuf iconpixbuf = null;
-		public SuposDbCategory Category = null;
+		private Gtk.Image m_IconImage = new Gtk.Image();
+		private bool m_IconChanged = false;
+		private string m_IconFileName = null;
+		private SuposCategory m_Category = null;
 		
-		[Widget] public Gtk.Dialog categorydialog;
-		[Widget] public Gtk.Entry identry;
-		[Widget] public Gtk.Entry nameentry;
+		[Widget] private Gtk.Dialog categorydialog;
+		[Widget] private Gtk.Entry identry;
+		[Widget] private Gtk.Entry nameentry;
 		[Widget] private Gtk.Button iconbutton;
+		[Widget] private Gtk.Button okbutton;
 		
 		
 		public CategoryDialog()
@@ -31,35 +33,53 @@ namespace SuPOSAdmin
 			Catalog.Init("suposadmin","./locale");
 			Glade.XML gxml = new Glade.XML (null, "suposadmin.glade", "categorydialog", "suposadmin");
 			gxml.Autoconnect (this);
-			Category  = new SuposDbCategory();
-			iconbutton.Add(iconimage);
-			iconimage.Show();
+			m_Category  = new SuposCategory();
+			iconbutton.Add(m_IconImage);
+			m_IconImage.Show();
+			
 		}
 		
-		public CategoryDialog(SuposDbCategory category)
+		public CategoryDialog(SuposCategory category)
 		{
 			Catalog.Init("suposadmin","./locale");
 			Glade.XML gxml = new Glade.XML (null, "suposadmin.glade", "categorydialog", "suposadmin");
 			gxml.Autoconnect (this);
 			if ( category != null)
 			{
-				Category = category;
-				identry.Text = Category.Id.ToString();
-				nameentry.Text = Category.Name;
-				iconimage.Pixbuf = Category.Icon.GetPixbuf();
-				if ( iconimage.Pixbuf != null)
-					iconimage.Pixbuf = iconimage.Pixbuf.ScaleSimple(50, 50, InterpType.Bilinear );
-				
-				
+				m_Category = category;
+				identry.Text = m_Category.Id.ToString();
+				nameentry.Text = m_Category.Name;
+				m_IconImage.Pixbuf = m_Category.Icon.GetPixbuf();
+				if ( m_IconImage.Pixbuf != null)
+					m_IconImage.Pixbuf = m_IconImage.Pixbuf.ScaleSimple(50, 50, InterpType.Bilinear );	
 			}
 			else
 			{
-				Category = new SuposDbCategory();
+				m_Category = new SuposCategory();
 			}
-			iconbutton.Add(iconimage);
-			iconimage.Show();
+			iconbutton.Add(m_IconImage);
+			m_IconImage.Show();
+			
 		}
 		
+		public int Run()
+		{
+			return categorydialog.Run();
+		}
+		
+		public void Destroy()
+		{
+			categorydialog.Destroy();
+		}
+		
+		public SuposCategory Category
+		{
+			get
+			{
+				return m_Category;
+			}
+		}
+			
 		//*********************************
 		// CALLBACKS
 		//*********************************
@@ -81,34 +101,39 @@ namespace SuPOSAdmin
 			int result = dlg.Run();
 			if ( (ResponseType)result == ResponseType.Ok )
 			{
-				if ( Category != null )
-				{
-					if(Category.Icon.Set(dlg.Filename) )
-					{
-						iconpixbuf = new Pixbuf ( dlg.Filename, 50, 50 );
-						iconimage.Pixbuf = iconpixbuf;
-					}
-				}
+				m_IconImage.Pixbuf = new Pixbuf ( dlg.Filename, 50, 50 );
+				m_IconChanged = true;
+				m_IconFileName = dlg.Filename;
 			}
 			if ( (ResponseType)result == ResponseType.No )
 			{
-				iconimage.Pixbuf.Dispose(); 
-				iconimage.Pixbuf = null;	
-				if ( Category != null)
-				{
-					Category.Icon.Clear();
-				}
+				m_IconImage.Pixbuf.Dispose(); 
+				m_IconImage.Pixbuf = null;
+				m_IconChanged = true;
+				m_IconFileName = null;
 			}
 			dlg.Destroy();
 		}
 		
 		private void OnOkClicked ( object sender, EventArgs a )
 		{
-			if ( Category != null )
+			if ( m_Category != null )
 			{
-				Category.Name = nameentry.Text;
+				m_Category.Name = nameentry.Text;
+				if(m_IconChanged)
+				{
+					if (m_IconFileName != null)
+						m_Category.Icon.Set(m_IconFileName);
+					else
+						m_Category.Icon.Clear();
+				}
 			}
 			
+		}
+		
+		private void OnActivate ( object sender, EventArgs a )
+		{
+			okbutton.Click();
 		}
 	}
 }

@@ -1,4 +1,4 @@
-// /home/xavier/Projects/SuPOS/SuPOSAdmin/AssemblyInfo.cs created with MonoDevelop
+// /home/xavier/Projects/SuPOS/SuposAdmin/AssemblyInfo.cs created with MonoDevelop
 // User: xavier at 22:22 24/07/2007
 //
 // To change standard headers go to Edit->Preferences->Coding->Standard Headers
