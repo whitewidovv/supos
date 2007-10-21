@@ -4,7 +4,7 @@ using System.Data;
 using Gdk;
 using Npgsql;
 
-// FIXME remove Db -> SuposCategory
+
 namespace LibSupos
 {
 	public class SuposCategory

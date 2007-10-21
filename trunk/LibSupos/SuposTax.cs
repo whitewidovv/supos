@@ -55,7 +55,6 @@ namespace LibSupos
 			{
 				return m_Name;
 			}
-			
 			set
 			{
 				m_Name = value;
@@ -68,10 +67,14 @@ namespace LibSupos
 			{
 				return m_Rate;
 			}
+			set
+			{
+				m_Rate = value;
+			}
 		}
 		
 		//******************************************
-		// Add (insert) the category to a data base
+		// Add (insert) the tax to a data base
 		//******************************************
 		public bool InsertIntoDb(SuposDb db)
 		{
@@ -92,9 +95,9 @@ namespace LibSupos
 			}
 			command.Dispose();
 			// Insert row
-			command = new NpgsqlCommand("INSERT INTO taxes(id, name, rate) VALUES(currval('categories_id_seq'), :name, :rate)", db.Connection);
+			command = new NpgsqlCommand("INSERT INTO taxes(id, name, rate) VALUES(currval('taxes_id_seq'), :name, :rate)", db.Connection);
 			NpgsqlParameter name_param = new NpgsqlParameter ( ":name", DbType.String );
-			NpgsqlParameter rate_param = new NpgsqlParameter ( ":rate", DbType.Double );
+			NpgsqlParameter rate_param = new NpgsqlParameter ( ":rate", DbType.Single );
 			name_param.Value = m_Name;
 			rate_param.Value = m_Rate;
 			command.Parameters.Add(name_param);
