@@ -25,7 +25,9 @@ namespace SuposAdmin
 		
 		[Widget] private Gtk.Window mainwindow;
 		[Widget] private Gtk.Statusbar statusbar;
-		[Widget] private Gtk.VBox stockvbox;
+		[Widget] private Gtk.Button categoriesbutton;
+		[Widget] private Gtk.Button taxesbutton;
+		[Widget] private Gtk.Button productsbutton;
 		[Widget] private Gtk.ToolButton toolbuttondisconnect;
 		[Widget] private Gtk.ToolButton toolbuttonconnect;
 		
@@ -41,7 +43,10 @@ namespace SuposAdmin
 			m_StatusContextId = statusbar.GetContextId("StatusMsg");
 			m_StatusContextId = statusbar.GetContextId("ActionMsg");
 			statusbar.Push( m_StatusContextId, "Disconnected");
-			stockvbox.Sensitive = false;
+			categoriesbutton.Sensitive = false;
+			taxesbutton.Sensitive = false;
+			categoriesbutton.Sensitive = false;
+			productsbutton.Sensitive = false;
 			toolbuttondisconnect.Sensitive = false;
 			m_Config = new Config();
 		}
@@ -94,7 +99,11 @@ namespace SuposAdmin
 				toolbuttonconnect.Sensitive = false;
 				if( m_DataBase.LoadCategories() )
 				{
-					stockvbox.Sensitive = true;
+					categoriesbutton.Sensitive = true;
+				}
+				if( m_DataBase.LoadTaxes() )
+				{
+					taxesbutton.Sensitive = true;
 				}
 				
 			}
@@ -113,8 +122,9 @@ namespace SuposAdmin
 			statusbar.Push( m_StatusContextId, "Disconnected");
 			toolbuttondisconnect.Sensitive = false;
 			toolbuttonconnect.Sensitive = true;
-			stockvbox.Sensitive = false;
-			//m_ClearView();
+			taxesbutton.Sensitive = false;
+			categoriesbutton.Sensitive = false;
+			//UNDONE close windows
 		}
 		
 	
@@ -143,7 +153,6 @@ namespace SuposAdmin
 			m_Disconnect();
 			Application.Quit ();
 			a.RetVal = true;
-			Console.WriteLine("MW");
 		}
 		
 		private void OnExitClicked (object sender, EventArgs a) 

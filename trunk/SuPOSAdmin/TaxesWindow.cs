@@ -3,6 +3,7 @@
 //
 
 using System;
+using System.Collections;
 using Mono.Unix;
 using Gtk;
 using Glade;
@@ -42,7 +43,7 @@ namespace SuposAdmin
 			Gtk.TreeViewColumn TaxRateColumn = new Gtk.TreeViewColumn ();
 			TaxIdColumn.Title = "ID";
 			TaxNameColumn.Title = "Name";
-			TaxRateColumn.Title = "Rate";
+			TaxRateColumn.Title = "Rate %";
 			taxestreeview.AppendColumn (TaxIdColumn);
 			taxestreeview.AppendColumn (TaxNameColumn);
 			taxestreeview.AppendColumn (TaxRateColumn);
@@ -58,7 +59,7 @@ namespace SuposAdmin
 			TaxIdColumn.SortColumnId = (int)TaxColumn.Id;
 			TaxNameColumn.SortColumnId = (int)TaxColumn.Name;
 			TaxRateColumn.SortColumnId = (int)TaxColumn.Rate;
-			//m_CreateTaxView();
+			m_CreateTaxView();
 		}
 		
 		//****************************************
@@ -67,6 +68,113 @@ namespace SuposAdmin
 		public void Show()
 		{
 			taxeswindow.ShowAll();
+		}
+		
+		//******************************************
+		// Clear TreeView
+		//******************************************
+		private void m_ClearView()
+		{
+			if ( m_Store != null)
+			{
+				m_Store.Clear();
+			}
+		}
+		
+		//******************************************
+		// Taxes in TreeView
+		//******************************************
+		private void m_CreateTaxView()
+		{
+			if ( m_DataBase != null)
+			{	
+				ArrayList taxes = m_DataBase.GetTaxes();
+				if ( taxes != null )
+				{
+					foreach (SuposTax tax in taxes )
+					{
+						m_Store.AppendValues(tax.Id.ToString(), tax.Name, tax.Rate.ToString(), tax);
+					}
+				}
+			}
+		}
+		
+		//********************************************
+		// CALLBACKS
+		//********************************************
+		#pragma warning disable 0169
+		private void OnAddClicked (object sender, EventArgs a)
+		{
+			TaxDialog dlg = new TaxDialog();
+			int result = dlg.Run();
+			if ( (ResponseType)result == ResponseType.Ok)
+			{
+				TreeIter iter;
+				m_DataBase.AddTax( dlg.Tax );
+				// Update view
+				iter = m_Store.AppendValues(dlg.Tax.Id.ToString(), dlg.Tax.Name, dlg.Tax.Rate.ToString(), dlg.Tax);
+				// Select new inserted row
+				taxestreeview.Selection.SelectIter( iter );
+			}
+			dlg.Destroy();
+			
+		}
+		
+		
+		private void OnModifyClicked (object sender, EventArgs a)
+		{
+			TreeIter iter;
+			TreeModel model;
+			TreePath[] path_array = taxestreeview.Selection.GetSelectedRows(out model);
+			
+			if ( path_array.Length>0  )
+			{		
+				model.GetIter(out iter, path_array[0]);
+			    SuposTax tax = (SuposTax) model.GetValue (iter, (int)TaxColumn.Data );
+			    TaxDialog dlg = new TaxDialog( tax );
+				int result = dlg.Run();
+				if ( (ResponseType)result == ResponseType.Ok)
+				{
+					tax.ApplyChange();
+					// Update of the row
+					model.SetValue(iter, (int)TaxColumn.Id, tax.Id.ToString() );
+					model.SetValue(iter, (int)TaxColumn.Name, tax.Name);
+					model.SetValue(iter, (int)TaxColumn.Rate, tax.Rate.ToString() );
+					//model.EmitRowChanged(path_array[0], iter);
+				}
+				dlg.Destroy();
+			}
+		}
+
+	
+		private void OnRefreshClicked (object sender, EventArgs a)
+		{
+			m_ClearView();
+			m_CreateTaxView();
+		}
+		
+		
+		private void OnDeleteClicked (object sender, EventArgs a)
+		{
+			TreeIter iter;
+			TreeModel model;
+			ArrayList rowlist = new ArrayList();
+			// boucle sur la selection
+			TreePath[] path_array = taxestreeview.Selection.GetSelectedRows(out model);
+			foreach ( TreePath path in path_array )
+			{		
+				model.GetIter(out iter, path);
+				SuposTax tax = (SuposTax) model.GetValue(iter, (int)TaxColumn.Data );
+			    m_DataBase.Remove(tax); // remove from DB
+				rowlist.Add( new TreeRowReference(model, path) ); //mark row for deletion
+			}
+			// Delete marked rows
+			ListStore store = (ListStore)model;
+			foreach ( TreeRowReference row in rowlist)
+			{
+				store.GetIter(out iter, row.Path);
+				store.Remove(ref iter);
+			}
 		}
 		
 		
