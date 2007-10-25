@@ -10,6 +10,7 @@ namespace LibSupos
 		// UNDONE Detect disconnections 
 		private ArrayList m_Categories = null;
 		private ArrayList m_Taxes = null;
+		private ArrayList m_Products = null;
 		private string m_ConnectionString = null;
 		private NpgsqlConnection m_Connection = null;
 		
@@ -46,6 +47,14 @@ namespace LibSupos
 			get
 			{
 				return m_Taxes;
+			}
+		}
+		
+		public ArrayList Products
+		{
+			get
+			{
+				return m_Products;
 			}
 		}
 		
@@ -89,23 +98,24 @@ namespace LibSupos
 			try
 			{
 				reader = Cmd.ExecuteReader();
+				m_Categories = new ArrayList();
+				while(reader.Read()) 
+				{	
+					SuposCategory tmpcat = new SuposCategory(this, (int)reader["id"] );
+					tmpcat.Name = reader["name"].ToString();
+					if ( !reader["icon"].GetType().Equals( typeof(System.DBNull) ) )
+					{
+						tmpcat.Icon.FileBuffer = (byte[])reader["icon"];
+					}
+					m_Categories.Add(tmpcat);
+				}
 			}
 			catch (Exception e)
 			{
 				Console.WriteLine ( e.Message );
 				return false;
 			}
-			m_Categories = new ArrayList();
-			while(reader.Read()) 
-			{	
-				SuposCategory tmpcat = new SuposCategory(this, (int)reader["id"] );
-				tmpcat.Name = reader["name"].ToString();
-				if ( !reader["icon"].GetType().Equals( typeof(System.DBNull) ) )
-				{
-					tmpcat.Icon.FileBuffer = (byte[])reader["icon"];
-				}
-				m_Categories.Add(tmpcat);
-			}
+			
 			return true;
 		}
 		
@@ -123,40 +133,73 @@ namespace LibSupos
 			try
 			{
 				reader = Cmd.ExecuteReader();
+				m_Taxes = new ArrayList();
+				while(reader.Read()) 
+				{	
+					SuposTax tmptax = new SuposTax(this, (int)reader["id"] );
+					tmptax.Name = reader["name"].ToString();
+					if( reader["rate"].GetType() != typeof(DBNull) )
+					{
+						tmptax.Rate = (float)reader["rate"];
+					}
+					m_Taxes.Add(tmptax);
+				}
 			}
 			catch (Exception e)
 			{
 				Console.WriteLine ( e.Message );
 				return false;
 			}
-			m_Taxes = new ArrayList();
-			while(reader.Read()) 
-			{	
-				SuposTax tmptax = new SuposTax(this, (int)reader["id"] );
-				tmptax.Name = reader["name"].ToString();
-				if( reader["rate"].GetType() != typeof(DBNull) )
-				{
-					tmptax.Rate = (float)reader["rate"];
-				}
-				m_Taxes.Add(tmptax);
-			}
+			
 			return true;
 		}
-
-		//***********************************************
-		// Return the category list (null if not loaded)
-		//***********************************************
-		public ArrayList GetCategories ()
-		{	
-			return m_Categories;
-		}
 		
-		//***********************************************
-		// Return the tax list (null if not loaded)
-		//***********************************************
-		public ArrayList GetTaxes ()
+		
+		//***************************************
+		// Load Products in memory
+		//***************************************
+		public bool LoadProducts()
 		{	
-			return m_Taxes;
+			if ( m_Products != null)
+			{
+				return false;
+			}
+			NpgsqlCommand Cmd = new NpgsqlCommand( "SELECT id, icon, name, category, tax, price FROM products", m_Connection );
+			NpgsqlDataReader reader;
+			try
+			{
+				reader = Cmd.ExecuteReader();
+				m_Products = new ArrayList();
+				while(reader.Read()) 
+				{	
+					SuposProduct tmpproduct = new SuposProduct(this, (int)reader["id"] );
+					tmpproduct.Name = reader["name"].ToString();
+					if ( reader["category"].GetType() != typeof(System.DBNull) )
+					{
+						tmpproduct.CategoryId = (int)reader["category"];
+					}
+					if ( reader["tax"].GetType() != typeof(System.DBNull) )
+					{
+						tmpproduct.TaxId = (int)reader["tax"];
+					}
+					if ( reader["price"].GetType() != typeof(System.DBNull) )
+					{
+							tmpproduct.Price = (float)(Decimal)reader["price"]; // TODO Check conversion
+					}
+					if ( reader["icon"].GetType() != typeof(System.DBNull) )
+					{
+						tmpproduct.Icon.FileBuffer = (byte[])reader["icon"];
+					}
+					m_Products.Add(tmpproduct);
+				}
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine ( e.Message );
+				return false;
+			}
+			
+			return true;
 		}
 		
 		//***********************************************
@@ -181,6 +224,18 @@ namespace LibSupos
 				return false;
 			}
 			return tax.InsertIntoDb(this);
+		}
+		
+		//***********************************************
+		// Add a product to DB
+		//***********************************************
+		public bool AddProduct ( SuposProduct product )
+		{
+			if ( product == null)
+			{
+				return false;
+			}
+			return product.InsertIntoDb(this);
 		}
 		
 		//*****************************
@@ -225,6 +280,54 @@ namespace LibSupos
 			}
 			m_Taxes.Remove(tax);
 			return true;
+		}
+		
+		//*****************************
+		// Remove the product from DB 
+		//*****************************
+		public bool Remove(SuposProduct product)
+		{
+			NpgsqlCommand command = new NpgsqlCommand("DELETE FROM products WHERE id=:id", m_Connection);
+			NpgsqlParameter id_param = new NpgsqlParameter ( ":id", DbType.Int32 );
+			id_param.Value = product.Id;
+			command.Parameters.Add(id_param);
+			try
+			{
+				command.ExecuteNonQuery();
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine( e.Message );
+				return false;
+			}
+			m_Products.Remove(product);
+			return true;
+		}
+		
+		//******************************
+		//
+		//******************************
+		public SuposTax TaxFromId(int id)
+		{
+			foreach (SuposTax tax in m_Taxes)
+			{
+				if( tax.Id == id )
+					return tax;
+			}
+			return null;
+		}
+		
+		//******************************
+		//
+		//******************************
+		public SuposCategory CategoryFromId(int id)
+		{
+			foreach (SuposCategory category in m_Categories)
+			{
+				if( category.Id == id )
+					return category;
+			}
+			return null;
 		}
 	}
 }

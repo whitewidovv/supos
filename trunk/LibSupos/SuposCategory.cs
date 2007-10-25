@@ -14,26 +14,18 @@ namespace LibSupos
 		private SuposIcon m_Icon = new SuposIcon();
 		private SuposDb m_DataBase = null;
 		
-		//private ArrayList m_Products;
 		
 		//******************************
 		// Constructors
 		//******************************
 		public SuposCategory()
 		{	
-			m_Icon = new SuposIcon();
-		}
-
-		public SuposCategory( string filename )
-		{	
-			m_Icon = new SuposIcon( filename );
 		}
 		
 		public SuposCategory(SuposDb db, int id)
 		{	
 			m_DataBase = db;
 			m_Id = id;
-			m_Icon = new SuposIcon();
 		}
 		
 		//*************************
@@ -128,7 +120,7 @@ namespace LibSupos
 			NpgsqlCommand command = new NpgsqlCommand("UPDATE categories SET name=:name, icon=:icon WHERE id=:id", m_DataBase.Connection);
 			NpgsqlParameter name_param = new NpgsqlParameter ( ":name", DbType.String );
 			NpgsqlParameter icon_param = new NpgsqlParameter ( ":icon", DbType.Binary );
-			NpgsqlParameter id_param = new NpgsqlParameter ( ":id", DbType.Int64 );
+			NpgsqlParameter id_param = new NpgsqlParameter ( ":id", DbType.Int32 );
 			name_param.Value = m_Name;
 			icon_param.Value = m_Icon.FileBuffer;
 			id_param.Value = m_Id;

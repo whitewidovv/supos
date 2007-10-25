@@ -125,7 +125,7 @@ namespace LibSupos
 			NpgsqlCommand command = new NpgsqlCommand("UPDATE taxes SET name=:name, rate=:rate WHERE id=:id", m_DataBase.Connection);
 			NpgsqlParameter name_param = new NpgsqlParameter ( ":name", DbType.String );
 			NpgsqlParameter rate_param = new NpgsqlParameter ( ":icon", DbType.Double );
-			NpgsqlParameter id_param = new NpgsqlParameter ( ":id", DbType.Int64 );
+			NpgsqlParameter id_param = new NpgsqlParameter ( ":id", DbType.Int32 );
 			name_param.Value = m_Name;
 			rate_param.Value = m_Rate;
 			id_param.Value = m_Id;
