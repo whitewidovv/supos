@@ -105,6 +105,10 @@ namespace SuposAdmin
 				{
 					taxesbutton.Sensitive = true;
 				}
+				if( m_DataBase.LoadProducts() )
+				{
+					productsbutton.Sensitive = true;
+				}
 				
 			}
 		}
@@ -173,15 +177,21 @@ namespace SuposAdmin
 		
 		private void OnCategoriesClicked (object sender, EventArgs a) 
 		{
-			// UNDONE show only one windows
+			// UNDONE show only one window
 			CategoriesWindow win = new CategoriesWindow(m_DataBase);
 			win.Show();
 		}
 		
 		private void OnTaxesClicked (object sender, EventArgs a) 
 		{
-			// UNDONE show only one windows
+			// UNDONE show only one window
 			TaxesWindow win = new TaxesWindow(m_DataBase);
+			win.Show();
+		}
+		private void OnProductsClicked (object sender, EventArgs a) 
+		{
+			// UNDONE show only one window
+			ProductsWindow win = new ProductsWindow(m_DataBase);
 			win.Show();
 		}
 	}

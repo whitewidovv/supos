@@ -88,7 +88,7 @@ namespace SuposAdmin
 		{
 			if ( m_DataBase != null)
 			{	
-				ArrayList taxes = m_DataBase.GetTaxes();
+				ArrayList taxes = m_DataBase.Taxes;
 				if ( taxes != null )
 				{
 					foreach (SuposTax tax in taxes )
@@ -110,11 +110,13 @@ namespace SuposAdmin
 			if ( (ResponseType)result == ResponseType.Ok)
 			{
 				TreeIter iter;
-				m_DataBase.AddTax( dlg.Tax );
-				// Update view
-				iter = m_Store.AppendValues(dlg.Tax.Id.ToString(), dlg.Tax.Name, dlg.Tax.Rate.ToString(), dlg.Tax);
-				// Select new inserted row
-				taxestreeview.Selection.SelectIter( iter );
+				if( m_DataBase.AddTax(dlg.Tax) )
+				{
+					// Update view
+					iter = m_Store.AppendValues(dlg.Tax.Id.ToString(), dlg.Tax.Name, dlg.Tax.Rate.ToString(), dlg.Tax);
+					// Select new inserted row
+					taxestreeview.Selection.SelectIter( iter );
+				}
 			}
 			dlg.Destroy();
 			
@@ -135,12 +137,13 @@ namespace SuposAdmin
 				int result = dlg.Run();
 				if ( (ResponseType)result == ResponseType.Ok)
 				{
-					tax.ApplyChange();
-					// Update of the row
-					model.SetValue(iter, (int)TaxColumn.Id, tax.Id.ToString() );
-					model.SetValue(iter, (int)TaxColumn.Name, tax.Name);
-					model.SetValue(iter, (int)TaxColumn.Rate, tax.Rate.ToString() );
-					//model.EmitRowChanged(path_array[0], iter);
+					if( tax.ApplyChange() )
+					{
+						// Update of the row
+						model.SetValue(iter, (int)TaxColumn.Id, tax.Id.ToString() );
+						model.SetValue(iter, (int)TaxColumn.Name, tax.Name);
+						model.SetValue(iter, (int)TaxColumn.Rate, tax.Rate.ToString() );
+					}
 				}
 				dlg.Destroy();
 			}
@@ -165,8 +168,10 @@ namespace SuposAdmin
 			{		
 				model.GetIter(out iter, path);
 				SuposTax tax = (SuposTax) model.GetValue(iter, (int)TaxColumn.Data );
-			    m_DataBase.Remove(tax); // remove from DB
-				rowlist.Add( new TreeRowReference(model, path) ); //mark row for deletion
+			    if( m_DataBase.Remove(tax) ) // remove from DB
+				{
+					rowlist.Add( new TreeRowReference(model, path) ); //mark row for deletion
+				}
 			}
 			// Delete marked rows
 			ListStore store = (ListStore)model;

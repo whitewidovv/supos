@@ -1,3 +1,8 @@
+2007-10-25  Xavier Thomas <xavier.thomas.1980 chez gmail dot com> 
+
+	Taxes, Category and Products management OK
+	Error must be show to user insteed of printed to console (last thing left to do) 
+
 2007-10-21  Xavier Thomas <xavier.thomas.1980 chez gmail dot com> 
 
 	Taxes management finished

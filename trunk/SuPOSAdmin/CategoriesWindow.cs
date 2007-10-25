@@ -88,7 +88,7 @@ namespace SuposAdmin
 		{
 			if ( m_DataBase != null)
 			{	
-				ArrayList categories = m_DataBase.GetCategories();
+				ArrayList categories = m_DataBase.Categories;
 				if ( categories != null )
 				{
 					foreach (SuposCategory category in categories )
@@ -113,17 +113,18 @@ namespace SuposAdmin
 			if ( (ResponseType)result == ResponseType.Ok)
 			{
 				TreeIter iter;
-				m_DataBase.AddCategory( dlg.Category );
-				// Update view
-				Pixbuf pb = dlg.Category.Icon.GetPixbuf();
-				if ( pb != null )
-						pb = pb.ScaleSimple( 50, 50, Gdk.InterpType.Bilinear );
-				iter = m_Store.AppendValues(dlg.Category.Id.ToString(), pb, dlg.Category.Name, dlg.Category);
-				// Select new inserted row
-				categoriestreeview.Selection.SelectIter( iter );
+				if( m_DataBase.AddCategory(dlg.Category) )
+				{
+					// Update view
+					Pixbuf pb = dlg.Category.Icon.GetPixbuf();
+					if ( pb != null )
+							pb = pb.ScaleSimple( 50, 50, Gdk.InterpType.Bilinear );
+					iter = m_Store.AppendValues(dlg.Category.Id.ToString(), pb, dlg.Category.Name, dlg.Category);
+					// Select new inserted row
+					categoriestreeview.Selection.SelectIter( iter );
+				}
 			}
 			dlg.Destroy();
-			
 		}
 		
 		
@@ -141,17 +142,18 @@ namespace SuposAdmin
 				int result = dlg.Run();
 				if ( (ResponseType)result == ResponseType.Ok)
 				{
-					cat.ApplyChange();
-					// Update of the row
-					model.SetValue(iter, (int)CategoryColumn.Id, cat.Id.ToString() );
-					model.SetValue(iter, (int)CategoryColumn.Name, cat.Name);
-					Pixbuf pb = cat.Icon.GetPixbuf();
-					if ( pb != null )
+					if( cat.ApplyChange() )
 					{
-						pb = pb.ScaleSimple( 50, 50, Gdk.InterpType.Bilinear );
-						model.SetValue(iter, (int)CategoryColumn.Icon, pb);
+						// Update of the row
+						model.SetValue(iter, (int)CategoryColumn.Id, cat.Id.ToString() );
+						model.SetValue(iter, (int)CategoryColumn.Name, cat.Name);
+						Pixbuf pb = cat.Icon.GetPixbuf();
+						if ( pb != null )
+						{
+							pb = pb.ScaleSimple( 50, 50, Gdk.InterpType.Bilinear );
+							model.SetValue(iter, (int)CategoryColumn.Icon, pb);
+						}
 					}
-					model.EmitRowChanged(path_array[0], iter);
 				}
 				dlg.Destroy();
 			}
@@ -175,8 +177,10 @@ namespace SuposAdmin
 			{		
 				model.GetIter(out iter, path);
 				SuposCategory cat = (SuposCategory) model.GetValue(iter, (int)CategoryColumn.Data );
-			    m_DataBase.Remove(cat);
-				rowlist.Add( new TreeRowReference(model, path) ); //mark row for deletion
+			    if ( m_DataBase.Remove(cat) )
+				{
+					rowlist.Add( new TreeRowReference(model, path) ); //mark row for deletion
+				}
 			}
 			// Delete marked rows
 			ListStore store = (ListStore)model;
