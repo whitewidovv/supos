@@ -7,6 +7,7 @@
 using System;
 using Gtk;
 using Glade;
+using Supos;
 
 public class GladeApp
 {
@@ -18,17 +19,9 @@ public class GladeApp
 	public GladeApp (string[] args) 
 	{
 		Application.Init ();
-
-		Glade.XML gxml = new Glade.XML (null, "supos.glade", "mainwindow", null);
-		gxml.Autoconnect (this);
+		new MainWindow();
 		Application.Run ();
 	}
 
-	// Connect the Signals defined in Glade
-	private void OnWindowDeleteEvent (object sender, DeleteEventArgs a) 
-	{
-		Application.Quit ();
-		a.RetVal = true;
-	}
 }
 
