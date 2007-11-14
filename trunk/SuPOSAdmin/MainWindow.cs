@@ -45,7 +45,6 @@ namespace SuposAdmin
 			statusbar.Push( m_StatusContextId, "Disconnected");
 			categoriesbutton.Sensitive = false;
 			taxesbutton.Sensitive = false;
-			categoriesbutton.Sensitive = false;
 			productsbutton.Sensitive = false;
 			toolbuttondisconnect.Sensitive = false;
 			m_Config = new Config();
@@ -128,6 +127,7 @@ namespace SuposAdmin
 			toolbuttonconnect.Sensitive = true;
 			taxesbutton.Sensitive = false;
 			categoriesbutton.Sensitive = false;
+			productsbutton.Sensitive = false;
 			//UNDONE close windows
 		}
 		
