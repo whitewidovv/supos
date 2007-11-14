@@ -65,6 +65,8 @@ namespace LibSupos
 		{
 			m_Connection = new NpgsqlConnection(m_ConnectionString);
 			m_Connection.Open();
+			// UNDONE detect deconnection
+			//m_Connection.State.
 		}
 		
 		
