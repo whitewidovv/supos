@@ -1,0 +1,22 @@
+<Combine name="supos" fileversion="2.0">
+  <Configurations active="Debug">
+    <Configuration name="Debug" ctype="CombineConfiguration">
+      <Entry build="True" name="Libsupos" configuration="Debug" />
+      <Entry build="True" name="supos-admin" configuration="Debug" />
+    </Configuration>
+    <Configuration name="Release" ctype="CombineConfiguration">
+      <Entry build="True" name="Libsupos" configuration="Release" />
+      <Entry build="True" name="supos-admin" configuration="Release" />
+    </Configuration>
+  </Configurations>
+  <StartMode startupentry="supos-admin" single="True">
+    <Execute type="None" entry="Libsupos" />
+    <Execute type="None" entry="supos-admin" />
+    <Execute type="None" entry="SuposAdmin" />
+  </StartMode>
+  <MonoDevelop.ChangeLogAddIn.ChangeLogInfo policy="UpdateNearestChangeLog" />
+  <Entries>
+    <Entry filename="Libsupos/Libsupos.mdp" />
+    <Entry filename="supos-admin/supos-admin.mdp" />
+  </Entries>
+</Combine>
