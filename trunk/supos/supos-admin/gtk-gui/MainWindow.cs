@@ -12,16 +12,6 @@
 
 public partial class MainWindow {
     
-    private Gtk.Action connect;
-    
-    private Gtk.Action disconnect;
-    
-    private Gtk.Action quit;
-    
-    private Gtk.Action File;
-    
-    private Gtk.Action Edit;
-    
     private Gtk.Action addnew;
     
     private Gtk.Action properties;
@@ -35,6 +25,16 @@ public partial class MainWindow {
     private Gtk.Action About;
     
     private Gtk.Action about;
+    
+    private Gtk.Action connect;
+    
+    private Gtk.Action disconnect;
+    
+    private Gtk.Action quit;
+    
+    private Gtk.Action File;
+    
+    private Gtk.Action Edit;
     
     private Gtk.VBox vbox1;
     
@@ -86,45 +86,45 @@ public partial class MainWindow {
         Stetic.Gui.Initialize(this);
         // Widget MainWindow
         Gtk.UIManager w1 = new Gtk.UIManager();
-        Gtk.ActionGroup w2 = new Gtk.ActionGroup("General");
-        this.connect = new Gtk.Action("connect", Mono.Unix.Catalog.GetString("_Connecter"), null, "gtk-connect");
-        this.connect.ShortLabel = Mono.Unix.Catalog.GetString("_Connecter");
-        w2.Add(this.connect, null);
-        this.disconnect = new Gtk.Action("disconnect", Mono.Unix.Catalog.GetString("_Déconnecter"), null, "gtk-disconnect");
-        this.disconnect.ShortLabel = Mono.Unix.Catalog.GetString("_Déconnecter");
-        w2.Add(this.disconnect, null);
-        this.quit = new Gtk.Action("quit", Mono.Unix.Catalog.GetString("_Quitter"), null, "gtk-quit");
-        this.quit.ShortLabel = Mono.Unix.Catalog.GetString("_Quitter");
-        w2.Add(this.quit, null);
-        this.File = new Gtk.Action("File", Mono.Unix.Catalog.GetString("_File"), null, null);
-        this.File.ShortLabel = Mono.Unix.Catalog.GetString("_File");
-        w2.Add(this.File, null);
-        this.Edit = new Gtk.Action("Edit", Mono.Unix.Catalog.GetString("_Edit"), null, null);
-        this.Edit.ShortLabel = Mono.Unix.Catalog.GetString("_Edit");
-        w2.Add(this.Edit, null);
-        w1.InsertActionGroup(w2, 0);
-        Gtk.ActionGroup w3 = new Gtk.ActionGroup("Edition");
+        Gtk.ActionGroup w2 = new Gtk.ActionGroup("Edition");
         this.addnew = new Gtk.Action("addnew", Mono.Unix.Catalog.GetString("A_jouter"), null, "gtk-add");
         this.addnew.ShortLabel = Mono.Unix.Catalog.GetString("A_jouter");
-        w3.Add(this.addnew, null);
+        w2.Add(this.addnew, null);
         this.properties = new Gtk.Action("properties", Mono.Unix.Catalog.GetString("_Propriétés"), null, "gtk-properties");
         this.properties.ShortLabel = Mono.Unix.Catalog.GetString("_Propriétés");
-        w3.Add(this.properties, null);
+        w2.Add(this.properties, null);
         this.delete = new Gtk.Action("delete", Mono.Unix.Catalog.GetString("_Supprimer"), null, "gtk-delete");
         this.delete.ShortLabel = Mono.Unix.Catalog.GetString("_Supprimer");
-        w3.Add(this.delete, null);
+        w2.Add(this.delete, null);
         this.refresh = new Gtk.Action("refresh", Mono.Unix.Catalog.GetString("A_ctualiser"), null, "gtk-refresh");
         this.refresh.ShortLabel = Mono.Unix.Catalog.GetString("A_ctualiser");
-        w3.Add(this.refresh, null);
+        w2.Add(this.refresh, null);
         this.preferences = new Gtk.Action("preferences", Mono.Unix.Catalog.GetString("_Préférences"), null, "gtk-preferences");
         this.preferences.ShortLabel = Mono.Unix.Catalog.GetString("_Préférences");
-        w3.Add(this.preferences, null);
+        w2.Add(this.preferences, null);
         this.About = new Gtk.Action("About", Mono.Unix.Catalog.GetString("_Help"), null, null);
         this.About.ShortLabel = Mono.Unix.Catalog.GetString("_Help");
-        w3.Add(this.About, null);
+        w2.Add(this.About, null);
         this.about = new Gtk.Action("about", Mono.Unix.Catalog.GetString("À _propos"), null, "gtk-about");
         this.about.ShortLabel = Mono.Unix.Catalog.GetString("À _propos");
-        w3.Add(this.about, null);
+        w2.Add(this.about, null);
+        w1.InsertActionGroup(w2, 0);
+        Gtk.ActionGroup w3 = new Gtk.ActionGroup("General");
+        this.connect = new Gtk.Action("connect", Mono.Unix.Catalog.GetString("_Connecter"), null, "gtk-connect");
+        this.connect.ShortLabel = Mono.Unix.Catalog.GetString("_Connecter");
+        w3.Add(this.connect, null);
+        this.disconnect = new Gtk.Action("disconnect", Mono.Unix.Catalog.GetString("_Déconnecter"), null, "gtk-disconnect");
+        this.disconnect.ShortLabel = Mono.Unix.Catalog.GetString("_Déconnecter");
+        w3.Add(this.disconnect, null);
+        this.quit = new Gtk.Action("quit", Mono.Unix.Catalog.GetString("_Quitter"), null, "gtk-quit");
+        this.quit.ShortLabel = Mono.Unix.Catalog.GetString("_Quitter");
+        w3.Add(this.quit, null);
+        this.File = new Gtk.Action("File", Mono.Unix.Catalog.GetString("_File"), null, null);
+        this.File.ShortLabel = Mono.Unix.Catalog.GetString("_File");
+        w3.Add(this.File, null);
+        this.Edit = new Gtk.Action("Edit", Mono.Unix.Catalog.GetString("_Edit"), null, null);
+        this.Edit.ShortLabel = Mono.Unix.Catalog.GetString("_Edit");
+        w3.Add(this.Edit, null);
         w1.InsertActionGroup(w3, 1);
         this.AddAccelGroup(w1.AccelGroup);
         this.Name = "MainWindow";
@@ -316,14 +316,14 @@ public partial class MainWindow {
         this.DefaultHeight = 600;
         this.Show();
         this.DeleteEvent += new Gtk.DeleteEventHandler(this.OnDeleteEvent);
-        this.connect.Activated += new System.EventHandler(this.OnConnect);
-        this.disconnect.Activated += new System.EventHandler(this.OnDisconnect);
-        this.quit.Activated += new System.EventHandler(this.OnExit);
         this.addnew.Activated += new System.EventHandler(this.OnAdd);
         this.properties.Activated += new System.EventHandler(this.OnProperties);
         this.delete.Activated += new System.EventHandler(this.OnDelete);
         this.refresh.Activated += new System.EventHandler(this.OnRefresh);
         this.preferences.Activated += new System.EventHandler(this.OnPreferences);
+        this.connect.Activated += new System.EventHandler(this.OnConnect);
+        this.disconnect.Activated += new System.EventHandler(this.OnDisconnect);
+        this.quit.Activated += new System.EventHandler(this.OnExit);
         this.generalinfobutton.Clicked += new System.EventHandler(this.OnGeneralInfoClicked);
         this.taxesbutton.Clicked += new System.EventHandler(this.OnTaxesClicked);
         this.categoriesbutton.Clicked += new System.EventHandler(this.OnCategoriesClicked);

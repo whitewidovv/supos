@@ -2,7 +2,7 @@
 <stetic-interface>
   <configuration>
     <images-root-path>..</images-root-path>
-    <target-gtk-version>2.10.2</target-gtk-version>
+    <target-gtk-version>2.10.4</target-gtk-version>
   </configuration>
   <import>
     <widget-library name="../bin/Debug/supos-admin.exe" internal="true" />
@@ -381,7 +381,7 @@
       </widget>
     </child>
   </widget>
-  <widget class="Gtk.Dialog" id="suposadmin.LoginDialog" design-size="270 137">
+  <widget class="Gtk.Dialog" id="suposadmin.LoginDialog" design-size="270 139">
     <property name="MemberName" />
     <property name="Title" translatable="yes">Login</property>
     <property name="WindowPosition">CenterOnParent</property>
@@ -442,6 +442,7 @@
                 <property name="MemberName" />
                 <property name="CanFocus">True</property>
                 <property name="IsEditable">True</property>
+                <property name="Visibility">False</property>
                 <property name="InvisibleChar">●</property>
               </widget>
               <packing>

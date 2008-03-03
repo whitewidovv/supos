@@ -68,6 +68,7 @@ namespace suposadmin {
             this.passentry.CanFocus = true;
             this.passentry.Name = "passentry";
             this.passentry.IsEditable = true;
+            this.passentry.Visibility = false;
             this.passentry.InvisibleChar = '●';
             this.table1.Add(this.passentry);
             Gtk.Table.TableChild w4 = ((Gtk.Table.TableChild)(this.table1[this.passentry]));
@@ -127,7 +128,7 @@ namespace suposadmin {
                 this.Child.ShowAll();
             }
             this.DefaultWidth = 270;
-            this.DefaultHeight = 137;
+            this.DefaultHeight = 139;
             this.Show();
         }
     }

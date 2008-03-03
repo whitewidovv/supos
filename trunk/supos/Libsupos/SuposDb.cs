@@ -110,7 +110,6 @@ namespace Libsupos
 			}
 			m_Connection = null;
 			m_Opened = false;
-			//UNDONE unload categories, tax, ... (free arraylist)
 		}
 		
 		public void LoadGeneralInfo()
