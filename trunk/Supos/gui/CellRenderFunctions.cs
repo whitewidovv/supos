@@ -8,7 +8,6 @@ using System;
 using System.Data;
 using Gtk;
 using Gdk;
-using Medsphere.Widgets;
 
 namespace Supos
 {
@@ -17,6 +16,30 @@ namespace Supos
 	static public class CellRenderFunctions
 	{
 		const int iconsize = 75;
+		
+		static public  void RenderName(Gtk.CellLayout cell_layout, Gtk.CellRenderer cell, Gtk.TreeModel tree_model, Gtk.TreeIter iter)
+		{
+			CellRendererText text = (CellRendererText)cell;
+			DataRow row = (DataRow)tree_model.GetValue(iter, 0);
+			if(row != null)
+			{
+				text.Text = row["Name"].ToString();
+			}
+		}
+		
+		static public  void RenderIcon(Gtk.CellLayout cell_layout, Gtk.CellRenderer cell, Gtk.TreeModel tree_model, Gtk.TreeIter iter)
+		{
+			CellRendererPixbuf pix = (CellRendererPixbuf)cell;
+			DataRow row = (DataRow)tree_model.GetValue(iter, 0);
+			if(row != null)
+			{
+				byte[] icon = Util.GetMedia( row["icon"].ToString() );
+				if ( icon != null )
+					pix.Pixbuf = new Gdk.Pixbuf( icon ).ScaleSimple(iconsize, iconsize, Gdk.InterpType.Bilinear);
+				else
+					pix.Pixbuf = null;
+			}
+		}
 		
 		static public  void RenderOrder(Gtk.CellLayout cell_layout, Gtk.CellRenderer cell, Gtk.TreeModel tree_model, Gtk.TreeIter iter)
 		{
@@ -66,22 +89,7 @@ namespace Supos
 			}
 		}
 		
-		static public void RenderNameIcon (IconLayout view, ICairoCellRenderer renderer, TreeModel model, TreeIter iter)
-		{
-			BoxCellRenderer box = (BoxCellRenderer)renderer;
-			PixbufCellRenderer pix = (PixbufCellRenderer)box.Children[0];
-			TextCellRenderer text = (TextCellRenderer)box.Children[1];
-			DataRow row = (DataRow)model.GetValue(iter, 0);
-			if(row != null)
-			{
-				byte[] icon = Util.GetMedia( row["icon"].ToString() );
-				if ( icon != null )
-					pix.Pixbuf = new Gdk.Pixbuf( icon ).ScaleSimple(iconsize, iconsize, Gdk.InterpType.Bilinear);
-				else
-					pix.Pixbuf = null;
-				text.Text = row["Name"].ToString();
-			}
-		}
+		
 		
 		static public void RenderOrderDetailProduct(TreeViewColumn tree_column, CellRenderer cell, TreeModel tree_model, TreeIter iter)
 		{

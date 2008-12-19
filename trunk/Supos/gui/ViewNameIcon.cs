@@ -7,7 +7,6 @@
 using System;
 using System.Data;
 using Gtk;
-using Medsphere.Widgets;
 
 namespace Supos
 {
@@ -20,7 +19,7 @@ namespace Supos
 		protected Gtk.Button upbutton;
 		protected Gtk.Button downbutton;
 		protected Gtk.ScrolledWindow swindow;
-		protected IconLayout layout;
+		protected IconView view;
 		
 		public ViewNameIcon() : base()
 		{
@@ -29,17 +28,19 @@ namespace Supos
 			downbutton = new Button(Gtk.Stock.GoDown);
 			downbutton.Clicked += OnDownClicked;
 			swindow = new ScrolledWindow();
-			layout = new IconLayout();
+			view = new IconView();
 			
-			CellRendererNameIcon cell = new CellRendererNameIcon();
-			layout.CellRenderer = cell;
-			layout.CellDataFunc = CellRenderFunctions.RenderNameIcon;
-			layout.LayoutAffinity = LayoutAffinity.Vertical;
-			layout.LayoutMode = LayoutMode.Grid;
-			layout.SelectionMode = Gtk.SelectionMode.Browse;
-			layout.SelectionChanged += OnSelectionChanged;
-			layout.ItemActivated += OnRowActivated;
-			swindow.Add(layout);
+			CellRendererPixbuf cellicon= new CellRendererPixbuf();
+			CellRendererText celltext = new CellRendererText();
+			celltext.Xalign=0.5f;
+			view.PackStart(cellicon, false);
+			view.SetCellDataFunc(cellicon, CellRenderFunctions.RenderIcon);
+			view.PackStart(celltext, false);
+			view.SetCellDataFunc(celltext, CellRenderFunctions.RenderName);
+			view.SelectionMode = Gtk.SelectionMode.Browse;
+			view.SelectionChanged += OnSelectionChanged;
+			view.ItemActivated += OnRowActivated;
+			swindow.Add(view);
 			swindow.HscrollbarPolicy = PolicyType.Never;
 			swindow.VscrollbarPolicy = PolicyType.Automatic;
 			this.PackStart(upbutton, false, false, 0);
@@ -47,7 +48,7 @@ namespace Supos
 			this.PackStart(downbutton, false, false, 0);
 			
 			store = new StoreBase();
-			layout.Model=store.ViewModel;
+			view.Model=store.ViewModel;
 			
 			ShowAll();
 		}
@@ -91,7 +92,7 @@ namespace Supos
 		{
 			TreeIter iter = TreeIter.Zero;
 			store.ViewModel.GetIterFirst(out iter);
-			layout.SelectPath( store.ViewModel.GetPath(iter) );
+			view.SelectPath( store.ViewModel.GetPath(iter) );
 		}
 
 		public DataRow SelectedRow
@@ -99,9 +100,9 @@ namespace Supos
 			get 
 			{
 				TreeIter iter = TreeIter.Zero;
-				if( layout.SelectedItems.Length > 0)
+				if( view.SelectedItems.Length > 0)
 				{
-					store.ViewModel.GetIter( out iter, layout.SelectedItems[0]);
+					store.ViewModel.GetIter( out iter, view.SelectedItems[0]);
 					return store.GetRow(iter);
 				}
 				return null;

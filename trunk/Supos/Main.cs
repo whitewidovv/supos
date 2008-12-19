@@ -14,7 +14,7 @@ namespace Supos
 		public static void Main (string[] args)
 		{
 			
-			//Gtk.Rc.Parse("/home/xavier/Projects/SuposGTK/SuposGTK/style.rc");
+			Gtk.Rc.Parse("/home/xavier/Projects/SuposGTK/SuposGTK/style.rc");
 			Application.Init ();
 			MainWindow win = new MainWindow ();
 			win.Show ();

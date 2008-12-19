@@ -35,7 +35,6 @@
     <File name="MainWindow.cs" subtype="Code" buildaction="Compile" />
     <File name="db/SuposDb.cs" subtype="Code" buildaction="Compile" />
     <File name="gui/CellRenderFunctions.cs" subtype="Code" buildaction="Compile" />
-    <File name="gui/CellRendererNameIcon.cs" subtype="Code" buildaction="Compile" />
     <File name="gui/ComboBoxCustomers.cs" subtype="Code" buildaction="Compile" />
     <File name="gui/ComboBoxOrders.cs" subtype="Code" buildaction="Compile" />
     <File name="gui/ComboBoxTaxes.cs" subtype="Code" buildaction="Compile" />
@@ -55,6 +54,5 @@
     <ProjectReference type="Gac" localcopy="True" refto="System.Data, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <ProjectReference type="Gac" localcopy="True" refto="System.Xml, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <ProjectReference type="Gac" localcopy="True" refto="Mono.Data, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
-    <ProjectReference type="Assembly" localcopy="True" refto="../Medsphere.Widgets-0.2.1/demo/Medsphere.Widgets.dll" />
   </References>
 </Project>
