@@ -1,6 +1,0 @@
-style "touch-style"
-{
-  font_name = "Sans 12"
-}
-
-widget "*.toucharea.*" style "touch-style"

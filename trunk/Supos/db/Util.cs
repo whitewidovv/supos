@@ -28,6 +28,13 @@ namespace Supos
 		static public byte[] GetMedia( string Path, string Media )
 		{
 			string path = Path + "/" + Media;
+			if( Path.EndsWith("/") )
+			{
+				path = Path + Media;
+			}
+			else {
+				path = Path + "/" + Media;
+			}
 			
 			if (File.Exists(path) )
 			{

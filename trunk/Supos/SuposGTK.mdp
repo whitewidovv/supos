@@ -41,7 +41,6 @@
     <File name="gui/ComboBoxPayments.cs" subtype="Code" buildaction="Compile" />
     <File name="gui/ViewOrderTotal.cs" subtype="Code" buildaction="Compile" />
     <File name="gui/ViewOrderDetailEdit.cs" subtype="Code" buildaction="Compile" />
-    <File name="style.rc" subtype="Code" buildaction="EmbedAsResource" />
     <File name="gui/FormOrderDetail.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>

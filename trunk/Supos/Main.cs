@@ -14,7 +14,7 @@ namespace Supos
 		public static void Main (string[] args)
 		{
 			
-			Gtk.Rc.Parse("/home/xavier/Projects/SuposGTK/SuposGTK/style.rc");
+			Gtk.Rc.ParseString("style \"touch-style\"{font_name = \"Sans 22\"} widget \"*.toucharea.*\" style \"touch-style\"");
 			Application.Init ();
 			MainWindow win = new MainWindow ();
 			win.Show ();
