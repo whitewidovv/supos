@@ -58,7 +58,7 @@ namespace Supos
 			// END build interface
 			
 			database = new SuposDb();
-			database.Provider = new SqliteDbProvider();
+			database.Provider = new SuposDbProvider();
 			database.Fill();
 			
 			catview.DataSource=database;

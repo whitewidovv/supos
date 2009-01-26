@@ -25,14 +25,9 @@ namespace Supos
 	public static class Util
 	{
 		
-		static private string LocalMediaDir
+		static public byte[] GetMedia( string Path, string Media )
 		{
-			get{ return "/home/xavier/Projects/SuposGTK/DB/Media/"; }
-		}
-		
-		static public byte[] GetMedia( string Media )
-		{
-			string path = LocalMediaDir + Media;
+			string path = Path + "/" + Media;
 			
 			if (File.Exists(path) )
 			{

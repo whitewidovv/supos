@@ -11,7 +11,7 @@ using Mono.Data;
 
 namespace Supos
 {
-	public class SqliteDbProvider
+	public class SuposDbProvider
 	{
 		private IDbConnection connection;
 		
@@ -63,7 +63,7 @@ namespace Supos
 			get { return metaAdapter; }
 		}
 		
-		public SqliteDbProvider()
+		public SuposDbProvider()
 		{
 			connection = ProviderFactory.CreateConnectionFromConfig("SqliteConnStr");
 			CreateAdapters();

@@ -12,7 +12,7 @@ namespace Supos
 	
 	public class SuposDb
 	{
-		private SqliteDbProvider provider;
+		private SuposDbProvider provider;
 		private SuposDataSet ds;
 		
 		public SuposDb()
@@ -20,7 +20,7 @@ namespace Supos
 			ds = new SuposDataSet();
 		}
 		
-		public SqliteDbProvider Provider
+		public SuposDbProvider Provider
 		{
 			get { return provider; }
 			set
@@ -53,6 +53,12 @@ namespace Supos
 			return true;
 		}
 		
+		public void SaveOrders()
+		{
+			this.provider.OrdersAdapter.Update(DataSet);
+			this.DataSet.Orders.AcceptChanges();
+		}
+		
 		public SuposDataSet.OrderDetailsRow AddProductInOrder(SuposDataSet.OrdersRow order, SuposDataSet.ProductsRow product)
 		{
 			if( order==null || product==null)
@@ -69,10 +75,5 @@ namespace Supos
 			return row;
 		}
 		
-		public void SaveOrders()
-		{
-			this.provider.OrdersAdapter.Update(DataSet);
-			this.DataSet.Orders.AcceptChanges();
-		}
 	}
 }

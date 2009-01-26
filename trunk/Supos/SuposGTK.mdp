@@ -19,7 +19,7 @@
     <File name="SuposGTK.exe.config" subtype="Code" buildaction="FileCopy" Gettext.ScanForTranslations="False" />
     <File name="gui" subtype="Directory" buildaction="Compile" />
     <File name="db" subtype="Directory" buildaction="Compile" />
-    <File name="db/SqliteDbProvider.cs" subtype="Code" buildaction="Compile" />
+    <File name="db/SuposDbProvider.cs" subtype="Code" buildaction="Compile" />
     <File name="db/SuposDataSet.cs" subtype="Code" buildaction="Compile" />
     <File name="gui/StoreBase.cs" subtype="Code" buildaction="Compile" />
     <File name="db/Util.cs" subtype="Code" buildaction="Compile" />
@@ -52,7 +52,8 @@
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <ProjectReference type="Gac" localcopy="True" refto="Mono.Posix, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
     <ProjectReference type="Gac" localcopy="True" refto="System.Data, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-    <ProjectReference type="Gac" localcopy="True" refto="System.Xml, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <ProjectReference type="Gac" localcopy="True" refto="Mono.Data, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
+    <ProjectReference type="Gac" localcopy="True" refto="System.Configuration, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <ProjectReference type="Gac" localcopy="True" refto="System.Xml, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   </References>
 </Project>
