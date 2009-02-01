@@ -16,7 +16,6 @@
   <Contents>
     <File name="src" subtype="Directory" buildaction="Compile" />
     <File name="src/AssemblyInfo.cs" subtype="Code" buildaction="Compile" />
-    <File name="src/MyClass.cs" subtype="Code" buildaction="Compile" />
     <File name="src/CellRenderFunctions.cs" subtype="Code" buildaction="Compile" />
     <File name="src/Clock.cs" subtype="Code" buildaction="Compile" />
     <File name="src/ComboBoxBase.cs" subtype="Code" buildaction="Compile" />
