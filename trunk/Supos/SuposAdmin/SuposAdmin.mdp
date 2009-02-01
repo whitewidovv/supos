@@ -17,5 +17,6 @@
     <File name="." subtype="Directory" buildaction="Compile" />
     <File name="src" subtype="Directory" buildaction="Compile" />
     <File name="src/Main.cs" subtype="Code" buildaction="Compile" />
+    <File name="src/AssemblyInfo.cs" subtype="Code" buildaction="Compile" />
   </Contents>
 </Project>
