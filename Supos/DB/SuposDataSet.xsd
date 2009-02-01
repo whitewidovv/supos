@@ -1,0 +1,203 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="SuposDataSet" targetNamespace="http://tempuri.org/TestDataSet.xsd" xmlns:mstns="http://tempuri.org/TestDataSet.xsd" xmlns="http://tempuri.org/TestDataSet.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections>
+          <Connection AppSettingsObjectName="Settings" AppSettingsPropertyName="testdbConnectionString" IsAppSettingsProperty="true" Modifier="Assembly" Name="testdbConnectionString (Settings)" ParameterPrefix="@" PropertyReference="ApplicationSettings.WindowsFormsApplication2.Properties.Settings.GlobalReference.Default.testdbConnectionString" Provider="System.Data.SQLite" />
+        </Connections>
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="SuposDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_UserDSName="TestDataSet" msprop:Generator_DataSetName="TestDataSet" msprop:EnableTableAdapterManager="True">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="Categories" msprop:Generator_UserTableName="Categories" msprop:Generator_RowDeletedName="CategoriesRowDeleted" msprop:Generator_RowChangedName="CategoriesRowChanged" msprop:Generator_RowClassName="CategoriesRow" msprop:Generator_RowChangingName="CategoriesRowChanging" msprop:Generator_RowEvArgName="CategoriesRowChangeEvent" msprop:Generator_RowEvHandlerName="CategoriesRowChangeEventHandler" msprop:Generator_TableClassName="CategoriesDataTable" msprop:Generator_TableVarName="tableCategories" msprop:Generator_RowDeletingName="CategoriesRowDeleting" msprop:Generator_TablePropName="Categories">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Id" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="1" msprop:Generator_UserColumnName="Id" msprop:Generator_ColumnVarNameInTable="columnId" msprop:Generator_ColumnPropNameInRow="Id" msprop:Generator_ColumnPropNameInTable="IdColumn" type="xs:long" />
+              <xs:element name="Name" msprop:Generator_UserColumnName="Name" msprop:Generator_ColumnVarNameInTable="columnName" msprop:Generator_ColumnPropNameInRow="Name" msprop:Generator_ColumnPropNameInTable="NameColumn" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="128" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Icon" msprop:Generator_UserColumnName="Icon" msprop:Generator_ColumnVarNameInTable="columnIcon" msprop:Generator_ColumnPropNameInRow="Icon" msprop:Generator_ColumnPropNameInTable="IconColumn" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="128" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Products" msprop:Generator_UserTableName="Products" msprop:Generator_RowDeletedName="ProductsRowDeleted" msprop:Generator_RowChangedName="ProductsRowChanged" msprop:Generator_RowClassName="ProductsRow" msprop:Generator_RowChangingName="ProductsRowChanging" msprop:Generator_RowEvArgName="ProductsRowChangeEvent" msprop:Generator_RowEvHandlerName="ProductsRowChangeEventHandler" msprop:Generator_TableClassName="ProductsDataTable" msprop:Generator_TableVarName="tableProducts" msprop:Generator_RowDeletingName="ProductsRowDeleting" msprop:Generator_TablePropName="Products">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Id" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_UserColumnName="Id" msprop:Generator_ColumnVarNameInTable="columnId" msprop:Generator_ColumnPropNameInRow="Id" msprop:Generator_ColumnPropNameInTable="IdColumn" type="xs:long" />
+              <xs:element name="CategoryId" msprop:Generator_UserColumnName="CategoryId" msprop:Generator_ColumnVarNameInTable="columnCategoryId" msprop:Generator_ColumnPropNameInRow="CategoryId" msprop:Generator_ColumnPropNameInTable="CategoryIdColumn" type="xs:long" />
+              <xs:element name="Name" msprop:Generator_UserColumnName="Name" msprop:Generator_ColumnVarNameInTable="columnName" msprop:Generator_ColumnPropNameInRow="Name" msprop:Generator_ColumnPropNameInTable="NameColumn" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="128" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Icon" msprop:Generator_UserColumnName="Icon" msprop:Generator_ColumnVarNameInTable="columnIcon" msprop:Generator_ColumnPropNameInRow="Icon" msprop:Generator_ColumnPropNameInTable="IconColumn" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="128" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="DefaultTaxId" msprop:Generator_UserColumnName="DefaultTaxId" msprop:Generator_ColumnVarNameInTable="columnDefaultTaxId" msprop:Generator_ColumnPropNameInRow="DefaultTaxId" msprop:Generator_ColumnPropNameInTable="DefaultTaxIdColumn" type="xs:long" minOccurs="0" />
+              <xs:element name="Price" msprop:Generator_UserColumnName="Price" msprop:Generator_ColumnVarNameInTable="columnPrice" msprop:Generator_ColumnPropNameInRow="Price" msprop:Generator_ColumnPropNameInTable="PriceColumn" type="xs:decimal" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Taxes" msprop:Generator_UserTableName="Taxes" msprop:Generator_RowDeletedName="TaxesRowDeleted" msprop:Generator_RowChangedName="TaxesRowChanged" msprop:Generator_RowClassName="TaxesRow" msprop:Generator_RowChangingName="TaxesRowChanging" msprop:Generator_RowEvArgName="TaxesRowChangeEvent" msprop:Generator_RowEvHandlerName="TaxesRowChangeEventHandler" msprop:Generator_TableClassName="TaxesDataTable" msprop:Generator_TableVarName="tableTaxes" msprop:Generator_RowDeletingName="TaxesRowDeleting" msprop:Generator_TablePropName="Taxes">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Id" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_UserColumnName="Id" msprop:Generator_ColumnVarNameInTable="columnId" msprop:Generator_ColumnPropNameInRow="Id" msprop:Generator_ColumnPropNameInTable="IdColumn" type="xs:long" />
+              <xs:element name="Name" msprop:Generator_UserColumnName="Name" msprop:Generator_ColumnVarNameInTable="columnName" msprop:Generator_ColumnPropNameInRow="Name" msprop:Generator_ColumnPropNameInTable="NameColumn" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="128" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Rate" msprop:Generator_UserColumnName="Rate" msprop:Generator_ColumnVarNameInTable="columnRate" msprop:Generator_ColumnPropNameInRow="Rate" msprop:Generator_ColumnPropNameInTable="RateColumn" type="xs:decimal" minOccurs="0" />
+              <xs:element name="Overrideable" type="xs:boolean" default="true" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Customers">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Id" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" type="xs:long" />
+              <xs:element name="Name" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="128" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Orders">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Id" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" type="xs:string" />
+              <xs:element name="CustomerId" type="xs:long" minOccurs="0" />
+              <xs:element name="PaymentId" type="xs:long" minOccurs="0" />
+              <xs:element name="TaxId" type="xs:long" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="OrderDetails">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Id" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" type="xs:string" />
+              <xs:element name="ProductId" type="xs:long" minOccurs="0" />
+              <xs:element name="Price" type="xs:decimal" minOccurs="0" />
+              <xs:element name="Quantity" type="xs:long" minOccurs="0" />
+              <xs:element name="OrderId" type="xs:string" minOccurs="0" />
+              <xs:element name="TaxId" type="xs:long" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Payments">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Id" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" type="xs:long" />
+              <xs:element name="Name" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="128" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Allowed" type="xs:boolean" default="true" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Meta">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Id" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" type="xs:long" />
+              <xs:element name="Property" type="xs:string" minOccurs="0" />
+              <xs:element name="Value" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+    <xs:unique name="PK_Categories" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:Categories" />
+      <xs:field xpath="mstns:Id" />
+    </xs:unique>
+    <xs:unique name="PK_Products" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:Products" />
+      <xs:field xpath="mstns:Id" />
+    </xs:unique>
+    <xs:unique name="PK_Taxes" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:Taxes" />
+      <xs:field xpath="mstns:Id" />
+    </xs:unique>
+    <xs:unique name="PK_Clients" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:Customers" />
+      <xs:field xpath="mstns:Id" />
+    </xs:unique>
+    <xs:unique name="PK_Orders" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:Orders" />
+      <xs:field xpath="mstns:Id" />
+    </xs:unique>
+    <xs:unique name="PK_OrderDetails" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:OrderDetails" />
+      <xs:field xpath="mstns:Id" />
+    </xs:unique>
+    <xs:unique name="PK_Payment" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:Payments" />
+      <xs:field xpath="mstns:Id" />
+    </xs:unique>
+    <xs:unique name="PK_Meta" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:Meta" />
+      <xs:field xpath="mstns:Id" />
+    </xs:unique>
+    <xs:keyref name="FK_Orders_OrderDetails" refer="PK_Orders">
+      <xs:selector xpath=".//mstns:OrderDetails" />
+      <xs:field xpath="mstns:OrderId" />
+    </xs:keyref>
+    <xs:keyref name="PK_Products_OrderDetails" refer="PK_Products" msdata:RelationName="FK_Products_OrderDetails">
+      <xs:selector xpath=".//mstns:OrderDetails" />
+      <xs:field xpath="mstns:ProductId" />
+    </xs:keyref>
+    <xs:keyref name="PK_Taxes_OrderDetails" refer="PK_Taxes" msdata:RelationName="FK_Taxes_OrderDetails">
+      <xs:selector xpath=".//mstns:OrderDetails" />
+      <xs:field xpath="mstns:TaxId" />
+    </xs:keyref>
+    <xs:keyref name="FK_Customers_Orders" refer="PK_Clients">
+      <xs:selector xpath=".//mstns:Orders" />
+      <xs:field xpath="mstns:CustomerId" />
+    </xs:keyref>
+    <xs:keyref name="FK_Categories_Products" refer="PK_Categories" msprop:rel_Generator_UserRelationName="FK_Categories_Products" msprop:rel_Generator_RelationVarName="relationFK_Categories_Products" msprop:rel_Generator_UserChildTable="Products" msprop:rel_Generator_UserParentTable="Categories" msprop:rel_Generator_ParentPropName="CategoriesRow" msprop:rel_Generator_ChildPropName="GetProductsRows">
+      <xs:selector xpath=".//mstns:Products" />
+      <xs:field xpath="mstns:CategoryId" />
+    </xs:keyref>
+    <xs:keyref name="FK_Taxes_Products" refer="PK_Taxes">
+      <xs:selector xpath=".//mstns:Products" />
+      <xs:field xpath="mstns:DefaultTaxId" />
+    </xs:keyref>
+  </xs:element>
+  <xs:annotation>
+    <xs:appinfo>
+      <msdata:Relationship name="R_Taxes_Orders" msdata:parent="Taxes" msdata:child="Orders" msdata:parentkey="Id" msdata:childkey="TaxId" />
+      <msdata:Relationship name="R_Payments_Orders" msdata:parent="Payments" msdata:child="Orders" msdata:parentkey="Id" msdata:childkey="PaymentId" />
+    </xs:appinfo>
+  </xs:annotation>
+</xs:schema>

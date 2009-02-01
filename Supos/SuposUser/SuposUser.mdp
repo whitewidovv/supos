@@ -1,0 +1,36 @@
+<Project name="SuposUser" fileversion="2.0" language="C#" clr-version="Net_2_0" ctype="DotNetProject">
+  <Configurations active="Debug">
+    <Configuration name="Debug" ctype="DotNetProjectConfiguration">
+      <Output directory="bin/Debug" assemblyKeyFile="." assembly="SuposUser" />
+      <Build debugmode="True" target="Exe" />
+      <Execution runwithwarnings="True" consolepause="True" runtime="MsNet" clr-version="Net_2_0" />
+      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="True" unsafecodeallowed="False" generateoverflowchecks="True" mainclass="" definesymbols="DEBUG" generatexmldocumentation="False" win32Icon="." ctype="CSharpCompilerParameters" />
+    </Configuration>
+    <Configuration name="Release" ctype="DotNetProjectConfiguration">
+      <Output directory="bin/Release" assembly="SuposUser" />
+      <Build debugmode="False" target="Exe" />
+      <Execution runwithwarnings="True" consolepause="True" runtime="MsNet" clr-version="Net_2_0" />
+      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="True" unsafecodeallowed="False" generateoverflowchecks="True" mainclass="" generatexmldocumentation="False" win32Icon="." ctype="CSharpCompilerParameters" />
+    </Configuration>
+  </Configurations>
+  <Contents>
+    <File name="src" subtype="Directory" buildaction="Compile" />
+    <File name="src/Main.cs" subtype="Code" buildaction="Compile" />
+    <File name="src/MainWindow.cs" subtype="Code" buildaction="Compile" />
+    <File name="src/AssemblyInfo.cs" subtype="Code" buildaction="Compile" />
+    <File name="SuposUser.exe.config" subtype="Code" buildaction="FileCopy" DeployService.TargetDirectoryId="Binaries" Gettext.ScanForTranslations="False" />
+  </Contents>
+  <References>
+    <ProjectReference type="Gac" localcopy="True" refto="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <ProjectReference type="Gac" localcopy="True" refto="gdk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <ProjectReference type="Gac" localcopy="True" refto="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <ProjectReference type="Gac" localcopy="True" refto="pango-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <ProjectReference type="Gac" localcopy="True" refto="System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <ProjectReference type="Gac" localcopy="True" refto="Mono.Posix, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
+    <ProjectReference type="Gac" localcopy="True" refto="Mono.Data, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
+    <ProjectReference type="Gac" localcopy="True" refto="System.Configuration, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <ProjectReference type="Project" localcopy="True" refto="Supos.Core" />
+    <ProjectReference type="Gac" localcopy="True" refto="System.Data, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <ProjectReference type="Project" localcopy="True" refto="Supos.Gui" />
+  </References>
+</Project>
