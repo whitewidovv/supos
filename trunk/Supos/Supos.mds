@@ -1,0 +1,29 @@
+<Combine name="Supos" fileversion="2.0">
+  <Configurations active="Debug">
+    <Configuration name="Debug" ctype="CombineConfiguration">
+      <Entry build="True" name="SuposUser" configuration="Debug" />
+      <Entry build="True" name="Supos.Core" configuration="Debug" />
+      <Entry build="True" name="Supos.Gui" configuration="Debug" />
+      <Entry build="True" name="SuposAdmin" configuration="Debug" />
+    </Configuration>
+    <Configuration name="Release" ctype="CombineConfiguration">
+      <Entry build="True" name="SuposUser" configuration="Release" />
+      <Entry build="True" name="Supos.Core" configuration="Release" />
+      <Entry build="True" name="Supos.Gui" configuration="Release" />
+      <Entry build="True" name="SuposAdmin" configuration="Release" />
+    </Configuration>
+  </Configurations>
+  <StartMode startupentry="SuposUser" single="True">
+    <Execute type="None" entry="Supos" />
+    <Execute type="None" entry="Supos.Core" />
+    <Execute type="None" entry="Supos.Gui" />
+    <Execute type="None" entry="SuposAdmin" />
+  </StartMode>
+  <MonoDevelop.ChangeLogAddIn.ChangeLogInfo policy="UpdateNearestChangeLog" />
+  <Entries>
+    <Entry filename="SuposUser/SuposUser.mdp" />
+    <Entry filename="Supos.Core/Supos.Core.mdp" />
+    <Entry filename="Supos.Gui/Supos.Gui.mdp" />
+    <Entry filename="SuposAdmin/SuposAdmin.mdp" />
+  </Entries>
+</Combine>
