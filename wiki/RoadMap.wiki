@@ -12,13 +12,13 @@ Supos.Core:
   * Fill adapters with UPDATE,DELETE and INSERT command for all read/write tables
 
 Supos.Gui:
-  * Do not use parameters from .exe.config directly
+  * ~~Do not use parameters from .exe.config directly~~
   * UI elements "Form" for all tables
   * UI elements "View" for all tables
   * Make UI elements "Form" and "View" configurable (viewable fields)
 
 SuposUser:
-  * Make SuposUser.exe.config deployed in bin dir automatically
+  * ~~Make SuposUser.exe.config deployed in bin dir automatically~~
   * Preferences dialog
   * Error dialogs
 
