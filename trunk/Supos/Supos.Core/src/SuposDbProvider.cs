@@ -9,7 +9,7 @@ using System.Data;
 using System.Collections.Generic;
 using Mono.Data;
 
-namespace Supos
+namespace Supos.Core
 {
 	public class SuposDbProvider
 	{

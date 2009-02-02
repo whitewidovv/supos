@@ -7,7 +7,7 @@
 using System;
 using Gtk;
 
-namespace Supos
+namespace Supos.Gui
 {
 	
 	

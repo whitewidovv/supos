@@ -6,8 +6,9 @@
 
 using System;
 using Gtk;
+using Supos.Core;
 
-namespace Supos
+namespace Supos.Gui
 {
 	
 	
@@ -50,7 +51,7 @@ namespace Supos
 		
 		public void SetOrder(SuposDataSet.OrdersRow order)
 		{
-			OrderTotal tot = Util.GetOrderTotal(order);
+			Supos.Core.SuposDb.OrderTotal tot = SuposDb.GetOrderTotal(order);
 			this.entryprice.Text = tot.TotPrice.ToString();
 			this.entrytax.Text = tot.TaxAmount.ToString();
 			this.entryttcprice.Text = tot.TotPriceTaxInc.ToString();

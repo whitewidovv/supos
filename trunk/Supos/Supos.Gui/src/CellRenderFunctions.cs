@@ -8,6 +8,7 @@ using System;
 using System.Data;
 using Gtk;
 using Gdk;
+using Supos.Core;
 
 namespace Supos
 {
@@ -33,7 +34,7 @@ namespace Supos
 			DataRow row = (DataRow)tree_model.GetValue(iter, 0);
 			if(row != null)
 			{
-				byte[] icon = Util.GetMedia( System.Configuration.ConfigurationManager.AppSettings["MediaPath"], row["icon"].ToString() );
+				byte[] icon = Util.GetMedia( row["icon"].ToString() );
 				if ( icon != null )
 					pix.Pixbuf = new Gdk.Pixbuf( icon ).ScaleSimple(iconsize, iconsize, Gdk.InterpType.Bilinear);
 				else

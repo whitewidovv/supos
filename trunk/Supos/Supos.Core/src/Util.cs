@@ -8,32 +8,21 @@ using System.Data;
 using System.IO;
 using System.Text;
 
-namespace Supos
+namespace Supos.Core
 {
-	public struct OrderTotal
-	{
-		public System.Decimal TaxAmount;
-		public System.Decimal TotPrice;
-		
-		public System.Decimal TotPriceTaxInc
-		{
-			get { return Math.Round(TotPrice + TaxAmount, 2); }
-		}
-		
-	}
 	
 	public static class Util
 	{
 		
-		static public byte[] GetMedia( string Path, string Media )
+		static public byte[] GetMedia( string Media )
 		{
-			string path = Path + "/" + Media;
-			if( Path.EndsWith("/") )
+			string path = System.Configuration.ConfigurationManager.AppSettings["MediaPath"];
+			if( path.EndsWith("/") )
 			{
-				path = Path + Media;
+				path = path + Media;
 			}
 			else {
-				path = Path + "/" + Media;
+				path = path + "/" + Media;
 			}
 			
 			if (File.Exists(path) )
@@ -92,22 +81,7 @@ namespace Supos
 			return DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss.fffffff");
 		}
 		
-		static public OrderTotal GetOrderTotal( SuposDataSet.OrdersRow order)
-		{
-			OrderTotal result = new OrderTotal();
-			if (order != null)
-			{
-				SuposDataSet.OrderDetailsRow[] details = (SuposDataSet.OrderDetailsRow[])order.GetChildRows( "FK_orders_OrderDetails" );
-				result.TotPrice = 0;
-				result.TaxAmount = 0;
-				foreach( SuposDataSet.OrderDetailsRow detail in details)
-				{
-					result.TotPrice += detail.Price*detail.Quantity;
-					result.TaxAmount += (Decimal)detail.TaxesRow.Rate * detail.Price;
-				}
-			}
-			return result;
-		}
+		
 		
 	}
 	

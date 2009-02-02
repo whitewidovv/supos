@@ -6,8 +6,9 @@
 
 using System;
 using Gtk;
+using Supos.Core;
 
-namespace Supos
+namespace Supos.Gui
 {
 	
 	

@@ -8,11 +8,11 @@ using System;
 using System.Text.RegularExpressions;
 using Gtk;
 
-namespace Supos
+namespace Supos.Gui
 {
 	
 	
-	public class ViewOrderDetailEdit : Supos.FormOrderDetail
+	public class ViewOrderDetailEdit : Supos.Gui.FormOrderDetail
 	{
 		static System.Globalization.NumberFormatInfo ni = null;
 		private Regex rex;

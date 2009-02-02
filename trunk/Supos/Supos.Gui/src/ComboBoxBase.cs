@@ -7,8 +7,9 @@
 using System;
 using System.Data;
 using Gtk;
+using Supos.Core;
 
-namespace Supos
+namespace Supos.Gui
 {
 
 	public class ComboBoxBase : Gtk.ComboBox
