@@ -11,52 +11,64 @@ using Supos.Gui;
 
 namespace SuposUser
 {
-	public partial class MainWindow: Gtk.Window
+	public class MainWindow: Gtk.Window
 	{	
-		private SuposDb database;
+		private ActionGroup actgroup = null;
+		private UIManager uim = null;
+		
 		private ViewNameIcon catview;
 		private ViewNameIcon prodview;
 		private ViewOrderEdit orderview;
 		
+		private SuposDb database;
+		
 		public MainWindow (): base (Gtk.WindowType.Toplevel)
 		{
-			
-			// build interface
-			VBox vbox;
-			vbox = new VBox();
-
-			Statusbar statusbar;
-			statusbar = new Statusbar();
-			//statusbar.BorderWidth = 6;
-			
-			HPaned hpan1;
-			hpan1 = new HPaned();
-			hpan1.Name = "toucharea";
-			
-			
+			// this window
+			this.Title= "Supos";
+			this.DeleteEvent += OnDeleteEvent;
+			// main vbox
+			VBox mainBox;
+			mainBox = new VBox(false, 0);			
+			this.Add(mainBox);
+			// actiongroup and uimanager stuff (menubar)
+			actgroup = new ActionGroup ("TestActions");
+			SetUpActionGroup();			
+			uim = new UIManager ();
+			uim.InsertActionGroup (actgroup, 0);
+			this.AddAccelGroup(uim.AccelGroup);
+			SetUpUiManager();
+			Gtk.Widget menubar = uim.GetWidget("/MenuBar");
+			mainBox.PackStart(menubar, false, false, 0);
+			// main panned view
+			HPaned mainPaned;
+			mainPaned = new HPaned();
+			mainPaned.Name = "toucharea";			
+			mainBox.PackStart(mainPaned, false, false, 0);
+			// order editing view
+			orderview = new ViewOrderEdit();
+			mainPaned.Add2(orderview);
+			// categories product paned view
 			HPaned hpan2;
 			hpan2 = new HPaned();
-			
+			mainPaned.Add1(hpan2);
+			// categories view	
+			catview = new ViewNameIcon();
+			hpan2.Add1(catview);
+			// products view
+			prodview = new ViewNameIcon();
+			hpan2.Add2(prodview);
+			// status bar
+			Statusbar statusbar;
+			statusbar = new Statusbar();
+			mainBox.PackStart(statusbar, false, false, 0);
+			// clock
 			Clock clock;
 			clock = new Clock();
-			clock.BorderWidth = 6;
-				
-			catview = new ViewNameIcon();
-			prodview = new ViewNameIcon();
-			orderview = new ViewOrderEdit();
-			
-			hpan2.Add1(catview);
-			hpan2.Add2(prodview);
-			hpan1.Add1(hpan2);
-			hpan1.Add2(orderview);
-			statusbar.PackStart(clock, false, true, 0);
-			vbox.PackStart(hpan1, true, true, 0);
-			vbox.PackStart(statusbar, false, true, 0);
-			this.Add(vbox);
-			this.DeleteEvent += OnDeleteEvent;
-			
-			this.ShowAll();
+			clock.BorderWidth = 6;			
+			statusbar.PackStart(clock, false, false, 0);
 			// END build interface
+				
 			
 			database = new SuposDb();
 			database.Provider = new SuposDbProvider();
@@ -75,12 +87,56 @@ namespace SuposUser
 			
 			orderview.DataSource = database;
 			
+			this.ApplyPreferencesStyle();
 			
+		}
+		
+		private void SetUpActionGroup()
+		{
+			ActionEntry[] entries = new ActionEntry[] {
+				new ActionEntry ("FileMenuAction", null, "_File", null, null, null),
+				new ActionEntry ("EditMenuAction", null, "_Edit", null, null, null),
+				new ActionEntry ("quit", Stock.Quit, null, "<control>Q", "Quit the application", new EventHandler (OnQuit)),
+				new ActionEntry ("preferences", Stock.Preferences, null, null, "Quit the application", new EventHandler (OnPreferences)),
+			};
+			actgroup.Add (entries);
+		}
+		
+		private void SetUpUiManager()
+		{
+			string ui_info = 
+			"<ui>" +
+			"  <menubar name='MenuBar'>\n" +
+			"    <menu name=\"file\" action=\"FileMenuAction\">\n" +
+			"      <menuitem name=\"quit\" action=\"quit\" />\n" +
+			"    </menu>\n" +
+			"    <menu name=\"Edit\" action=\"EditMenuAction\">\n" +
+			"      <menuitem name=\"cut\" action=\"preferences\" />\n" +
+			"    </menu>\n" +
+			"  </menubar>\n" +
+			"  <toolbar name=\"toolbar\">\n" +
+			"  </toolbar>\n" +
+			"</ui>";
+			uim.AddUiFromString (ui_info);
+		}
+		
+		protected void ApplyPreferencesStyle()
+		{
+			Gtk.Rc.ParseString("style \"touch-style\"{font_name = \"Sans 12\"} widget \"*.toucharea.*\" style \"touch-style\"");
+			this.ResetRcStyles();
+		}
+		
+		protected void OnQuit (object obj, EventArgs args)
+		{
+			Application.Quit ();
+		}
+		
+		protected void OnPreferences (object obj, EventArgs args)
+		{
 		}
 		
 		protected void OnDeleteEvent (object sender, DeleteEventArgs a)
 		{
-			
 			Application.Quit ();
 			a.RetVal = true;
 		}

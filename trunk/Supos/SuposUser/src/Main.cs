@@ -12,13 +12,14 @@ namespace SuposUser
 	class MainClass
 	{
 		public static void Main (string[] args)
-		{
-			
-			Gtk.Rc.ParseString("style \"touch-style\"{font_name = \"Sans 12\"} widget \"*.toucharea.*\" style \"touch-style\"");
+		{		
 			Application.Init ();
-			MainWindow win = new MainWindow ();
-			win.Show ();
+			MainWindow win = new MainWindow ();	
+			
+			win.ShowAll ();
 			Application.Run ();
 		}
+		
+		
 	}
 }
