@@ -8,7 +8,7 @@ using System;
 using System.Data;
 using Gtk;
 
-namespace Supos
+namespace Supos.Gui
 {
 	
 	

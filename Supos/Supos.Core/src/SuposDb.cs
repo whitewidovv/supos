@@ -6,7 +6,7 @@
 
 using System;
 
-namespace Supos
+namespace Supos.Core
 {
 	
 	
@@ -73,6 +73,35 @@ namespace Supos
 			row.Price = product.Price;
 			ds.OrderDetails.AddOrderDetailsRow(row);
 			return row;
+		}
+		
+		public struct OrderTotal
+		{
+			public System.Decimal TaxAmount;
+			public System.Decimal TotPrice;
+			
+			public System.Decimal TotPriceTaxInc
+			{
+				get { return Math.Round(TotPrice + TaxAmount, 2); }
+			}
+			
+		}
+		
+		static public OrderTotal GetOrderTotal( SuposDataSet.OrdersRow order)
+		{
+			OrderTotal result = new OrderTotal();
+			if (order != null)
+			{
+				SuposDataSet.OrderDetailsRow[] details = (SuposDataSet.OrderDetailsRow[])order.GetChildRows( "FK_orders_OrderDetails" );
+				result.TotPrice = 0;
+				result.TaxAmount = 0;
+				foreach( SuposDataSet.OrderDetailsRow detail in details)
+				{
+					result.TotPrice += detail.Price*detail.Quantity;
+					result.TaxAmount += (Decimal)detail.TaxesRow.Rate * detail.Price;
+				}
+			}
+			return result;
 		}
 		
 	}

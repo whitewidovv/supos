@@ -6,16 +6,17 @@
 using System;
 using System.Data;
 using Gtk;
-using Supos;
+using Supos.Core;
+using Supos.Gui;
 
-namespace Supos
+namespace SuposUser
 {
 	public partial class MainWindow: Gtk.Window
 	{	
 		private SuposDb database;
-		private Supos.ViewNameIcon catview;
-		private Supos.ViewNameIcon prodview;
-		private Supos.ViewOrderEdit orderview;
+		private ViewNameIcon catview;
+		private ViewNameIcon prodview;
+		private ViewOrderEdit orderview;
 		
 		public MainWindow (): base (Gtk.WindowType.Toplevel)
 		{
