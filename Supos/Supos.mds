@@ -18,6 +18,7 @@
     <Execute type="None" entry="Supos.Core" />
     <Execute type="None" entry="Supos.Gui" />
     <Execute type="None" entry="SuposAdmin" />
+    <Execute type="None" entry="Test2" />
   </StartMode>
   <MonoDevelop.ChangeLogAddIn.ChangeLogInfo policy="UpdateNearestChangeLog" />
   <Entries>
