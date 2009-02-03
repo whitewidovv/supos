@@ -25,9 +25,11 @@ namespace Supos.Gui
 		
 		public ViewBase() : base()
 		{	
-			upbutton = new Button(Gtk.Stock.GoUp);
+			upbutton = new Button();
+			upbutton.Add( new Image(Stock.GoUp, IconSize.Button) );
 			upbutton.Clicked += OnUpClicked;
-			downbutton = new Button(Gtk.Stock.GoDown);
+			downbutton = new Button();
+			downbutton.Add( new Image(Stock.GoDown, IconSize.Button) );
 			downbutton.Clicked += OnDownClicked;
 			swindow = new ScrolledWindow();
 			treeview = new TreeView();

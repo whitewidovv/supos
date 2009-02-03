@@ -90,10 +90,8 @@ namespace Supos.Gui
 					case "Sqlite" :
 						TypeComboSetActive("SQLite");
 						if( sqliterex.IsMatch(confmatch.Groups["constr"].Value) ) {
-							System.Console.WriteLine("sqlitematch 1");
 							Match constrmatch = sqliterex.Match(confmatch.Groups["constr"].Value);
-							if( constrmatch.Groups["datasource"] != null) {								
-								System.Console.WriteLine("sqlitematch 2");
+							if( constrmatch.Groups["datasource"] != null) {
 								dbEntry.Text = constrmatch.Groups["datasource"].Value;
 							}
 						}
