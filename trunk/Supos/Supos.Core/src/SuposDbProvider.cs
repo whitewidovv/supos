@@ -65,7 +65,7 @@ namespace Supos.Core
 		
 		public SuposDbProvider()
 		{
-			connection = ProviderFactory.CreateConnectionFromConfig("SqliteConnStr");
+			connection = ProviderFactory.CreateConnectionFromConfig("ConnStr");
 			CreateAdapters();
 		}
 

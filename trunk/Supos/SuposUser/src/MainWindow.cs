@@ -87,7 +87,7 @@ namespace SuposUser
 			
 			orderview.DataSource = database;
 			
-			this.ApplyPreferencesStyle();
+			this.ApplyViewPreferences();
 			
 		}
 		
@@ -96,8 +96,10 @@ namespace SuposUser
 			ActionEntry[] entries = new ActionEntry[] {
 				new ActionEntry ("FileMenuAction", null, "_File", null, null, null),
 				new ActionEntry ("EditMenuAction", null, "_Edit", null, null, null),
+				new ActionEntry ("HelpMenuAction", null, "_Help", null, null, null),
 				new ActionEntry ("quit", Stock.Quit, null, "<control>Q", "Quit the application", new EventHandler (OnQuit)),
-				new ActionEntry ("preferences", Stock.Preferences, null, null, "Quit the application", new EventHandler (OnPreferences)),
+				new ActionEntry ("preferences", Stock.Preferences, null, "<control>P", "Set application preferences", new EventHandler (OnPreferences)),
+				new ActionEntry ("about", Stock.About, null, "<control>A", "Information about the application", new EventHandler (OnPreferences)),
 			};
 			actgroup.Add (entries);
 		}
@@ -110,8 +112,11 @@ namespace SuposUser
 			"    <menu name=\"file\" action=\"FileMenuAction\">\n" +
 			"      <menuitem name=\"quit\" action=\"quit\" />\n" +
 			"    </menu>\n" +
-			"    <menu name=\"Edit\" action=\"EditMenuAction\">\n" +
-			"      <menuitem name=\"cut\" action=\"preferences\" />\n" +
+			"    <menu name=\"edit\" action=\"EditMenuAction\">\n" +
+			"      <menuitem name=\"preferences\" action=\"preferences\" />\n" +
+			"    </menu>\n" +
+			"    <menu name=\"help\" action=\"HelpMenuAction\">\n" +
+			"      <menuitem name=\"about\" action=\"about\" />\n" +
 			"    </menu>\n" +
 			"  </menubar>\n" +
 			"  <toolbar name=\"toolbar\">\n" +
@@ -120,12 +125,14 @@ namespace SuposUser
 			uim.AddUiFromString (ui_info);
 		}
 		
-		protected void ApplyPreferencesStyle()
+		protected void ApplyViewPreferences()
 		{
 			Gtk.Rc.ParseString("style \"touch-style\"{font_name = \"Sans 12\"} widget \"*.toucharea.*\" style \"touch-style\"");
 			this.ResetRcStyles();
 		}
 		
+		
+		// Callbacks
 		protected void OnQuit (object obj, EventArgs args)
 		{
 			Application.Quit ();
@@ -133,6 +140,13 @@ namespace SuposUser
 		
 		protected void OnPreferences (object obj, EventArgs args)
 		{
+			DialogPreferencesBase dialog = new DialogPreferencesBase(this);
+			dialog.SetDatabaseSettingsFromConfig( System.Configuration.ConfigurationManager.AppSettings["ConnStr"] );
+			int result = dialog.Run();
+			if( result == (int)ResponseType.Ok)
+			{
+			}			
+			dialog.Destroy();
 		}
 		
 		protected void OnDeleteEvent (object sender, DeleteEventArgs a)
@@ -164,5 +178,4 @@ namespace SuposUser
 		
 		
 	}
-	
 }
