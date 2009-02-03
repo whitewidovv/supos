@@ -16,6 +16,8 @@ namespace SuposUser
 		private ActionGroup actgroup = null;
 		private UIManager uim = null;
 		
+		private VBox mainBox;		
+		private HPaned mainPaned;
 		private ViewNameIcon catview;
 		private ViewNameIcon prodview;
 		private ViewOrderEdit orderview;
@@ -28,8 +30,7 @@ namespace SuposUser
 			this.Title= "Supos";
 			this.DeleteEvent += OnDeleteEvent;
 			// main vbox
-			VBox mainBox;
-			mainBox = new VBox(false, 0);			
+			mainBox = new VBox(false, 0);
 			this.Add(mainBox);
 			// actiongroup and uimanager stuff (menubar)
 			actgroup = new ActionGroup ("TestActions");
@@ -40,9 +41,10 @@ namespace SuposUser
 			SetUpUiManager();
 			Gtk.Widget menubar = uim.GetWidget("/MenuBar");
 			mainBox.PackStart(menubar, false, false, 0);
+			actgroup.GetAction("disconnect").Sensitive=false;
 			// main panned view
-			HPaned mainPaned;
 			mainPaned = new HPaned();
+			mainPaned.Sensitive = false;
 			mainPaned.Name = "toucharea";			
 			mainBox.PackStart(mainPaned, false, false, 0);
 			// order editing view
@@ -54,9 +56,15 @@ namespace SuposUser
 			mainPaned.Add1(hpan2);
 			// categories view	
 			catview = new ViewNameIcon();
+			catview.DataMember="Categories";
+			catview.SelectionChanged += this.OnCatSelectionChanged;
+			catview.WidthRequest= 100;
 			hpan2.Add1(catview);
 			// products view
 			prodview = new ViewNameIcon();
+			prodview.DataMember = "Products";
+			prodview.RowActivated += this.OnProdRowActivated;			
+			prodview.WidthRequest= 200;
 			hpan2.Add2(prodview);
 			// status bar
 			Statusbar statusbar;
@@ -68,24 +76,6 @@ namespace SuposUser
 			clock.BorderWidth = 6;			
 			statusbar.PackStart(clock, false, false, 0);
 			// END build interface
-				
-			
-			database = new SuposDb();
-			database.Provider = new SuposDbProvider();
-			database.Fill();
-			
-			catview.DataSource=database;
-			catview.DataMember="Categories";
-			catview.SelectionChanged += this.OnCatSelectionChanged;
-			catview.SelectFrist();
-			catview.WidthRequest= 100;
-			
-			prodview.DataSource = database;
-			prodview.DataMember = "Products";
-			prodview.RowActivated += this.OnProdRowActivated;			
-			prodview.WidthRequest= 200;
-			
-			orderview.DataSource = database;
 			
 			this.ApplyViewPreferences();
 			
@@ -97,6 +87,8 @@ namespace SuposUser
 				new ActionEntry ("FileMenuAction", null, "_File", null, null, null),
 				new ActionEntry ("EditMenuAction", null, "_Edit", null, null, null),
 				new ActionEntry ("HelpMenuAction", null, "_Help", null, null, null),
+				new ActionEntry ("connect", Stock.Connect, null, "<control>C", "Connect to Database", new EventHandler (OnConnect)),
+				new ActionEntry ("disconnect", Stock.Disconnect, null, "<control>D", "Disconnect from Database", new EventHandler (OnDisconnect)),
 				new ActionEntry ("quit", Stock.Quit, null, "<control>Q", "Quit the application", new EventHandler (OnQuit)),
 				new ActionEntry ("preferences", Stock.Preferences, null, "<control>P", "Set application preferences", new EventHandler (OnPreferences)),
 				new ActionEntry ("about", Stock.About, null, "<control>A", "Information about the application", new EventHandler (OnPreferences)),
@@ -110,6 +102,9 @@ namespace SuposUser
 			"<ui>" +
 			"  <menubar name='MenuBar'>\n" +
 			"    <menu name=\"file\" action=\"FileMenuAction\">\n" +
+			"      <menuitem name=\"connect\" action=\"connect\" />\n" +
+			"      <menuitem name=\"disconnet\" action=\"disconnect\" />\n" +
+			"      <separator name=\"separator1\" />\n" +
 			"      <menuitem name=\"quit\" action=\"quit\" />\n" +
 			"    </menu>\n" +
 			"    <menu name=\"edit\" action=\"EditMenuAction\">\n" +
@@ -147,6 +142,36 @@ namespace SuposUser
 			{
 			}			
 			dialog.Destroy();
+		}
+		
+		protected void OnConnect (object obj, EventArgs args)
+		{
+			if( database == null) {
+				database = new SuposDb();
+				database.Provider = new SuposDbProvider();
+				database.Fill();
+				catview.DataSource=database;
+				catview.SelectFrist();
+				prodview.DataSource = database;
+				orderview.DataSource = database;
+				mainPaned.Sensitive = true;
+				actgroup.GetAction("connect").Sensitive=false;
+				actgroup.GetAction("disconnect").Sensitive=true;
+			}
+		}
+		
+		protected void OnDisconnect (object obj, EventArgs args)
+		{
+			if( database != null) {
+				database.Provider = null;
+				database = null;
+				catview.DataSource = null;
+				prodview.DataSource = null;
+				orderview.DataSource = null;
+				mainPaned.Sensitive = false;
+				actgroup.GetAction("connect").Sensitive=true;
+				actgroup.GetAction("disconnect").Sensitive=false;
+			}
 		}
 		
 		protected void OnDeleteEvent (object sender, DeleteEventArgs a)
