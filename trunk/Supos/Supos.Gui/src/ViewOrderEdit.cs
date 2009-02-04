@@ -29,6 +29,7 @@ namespace Supos.Gui
 		{
 			comboorder = new ComboBoxOrders();
 			comboorder.Changed += OnOrderChanged;
+			comboorder.WidthRequest = 200;
 			
 			butneworder = new Button();
 			butneworder.Add( new Image(Stock.New, IconSize.Button) );

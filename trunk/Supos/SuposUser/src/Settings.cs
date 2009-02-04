@@ -73,11 +73,13 @@ namespace SuposUser {
 		
 	}
 		
-	public class Settings {
-		// public to allow serialization	
+	public class Settings {	
 		public int LastSeenVersion = -1;
 		public DbSettings dbSettings = new DbSettings();
-
-		
+		public ViewSettings viewSettings = new ViewSettings();
+	}
+	
+	public class ViewSettings {
+		public string Font = "Sans 9";
 	}
 }

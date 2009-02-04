@@ -14,7 +14,7 @@ namespace Supos.Gui
 	
 	public class DialogPreferencesBase : Gtk.Dialog
 	{
-		private Notebook notebook;
+		protected Notebook notebook;
 		private FormDatabasePreferences dbForm;
 		
 		public DialogPreferencesBase(Window parent) : base("Preferences", parent, DialogFlags.Modal, Stock.Ok, ResponseType.Ok, Stock.Cancel, ResponseType.Cancel)

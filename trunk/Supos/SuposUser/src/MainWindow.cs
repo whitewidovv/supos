@@ -51,23 +51,23 @@ namespace SuposUser
 			mainBox.PackStart(mainPaned, true, true, 0);
 			// order editing view
 			orderview = new ViewOrderEdit();
-			mainPaned.Add2(orderview);
+			mainPaned.Pack2(orderview, false, false);
 			// categories product paned view
 			HPaned hpan2;
 			hpan2 = new HPaned();
-			mainPaned.Add1(hpan2);
+			mainPaned.Pack1(hpan2, true, false);
 			// categories view	
 			catview = new ViewNameIcon();
 			catview.DataMember="Categories";
 			catview.SelectionChanged += this.OnCatSelectionChanged;
-			catview.WidthRequest= 100;
-			hpan2.Add1(catview);
+			catview.WidthRequest= 200;
+			hpan2.Pack1(catview, false, false);
 			// products view
 			prodview = new ViewNameIcon();
 			prodview.DataMember = "Products";
 			prodview.RowActivated += this.OnProdRowActivated;			
-			prodview.WidthRequest= 200;
-			hpan2.Add2(prodview);
+			prodview.WidthRequest= 400;
+			hpan2.Pack2(prodview, true, false);
 			// status bar
 			Statusbar statusbar;
 			statusbar = new Statusbar();
@@ -79,7 +79,7 @@ namespace SuposUser
 			statusbar.PackStart(clock, false, false, 0);
 			// END build interface
 			
-			this.ApplyViewPreferences();
+			this.ApplyViewPreferences(SettingsHandler.Settings.viewSettings);
 			
 		}
 		
@@ -131,9 +131,12 @@ namespace SuposUser
 			uim.AddUiFromString (ui_info);
 		}
 		
-		protected void ApplyViewPreferences()
+		protected void ApplyViewPreferences( ViewSettings config)
 		{
-			Gtk.Rc.ParseString("style \"touch-style\"{font_name = \"Sans 12\"} widget \"*.toucharea.*\" style \"touch-style\"");
+			string rcstring = "style \"touch-style\"{font_name = \"";
+			rcstring += config.Font;
+			rcstring += "\"} widget \"*.toucharea.*\" style \"touch-style\"";
+			Gtk.Rc.ParseString( rcstring);
 			this.ResetRcStyles();
 		}
 		
@@ -181,13 +184,14 @@ namespace SuposUser
 		
 		protected void OnPreferences (object obj, EventArgs args)
 		{
-			DialogPreferencesBase dialog = new DialogPreferencesBase(this);
-			dialog.LoadDatabaseSettings( SettingsHandler.Settings.dbSettings );
+			DialogPreferences dialog = new DialogPreferences(this);
+			dialog.LoadSettings( SettingsHandler.Settings );
 			int result = dialog.Run();
 			if( result == (int)ResponseType.Ok)
 			{
-				dialog.ApplyDatabaseSettings( SettingsHandler.Settings.dbSettings );
+				dialog.ApplySettings( SettingsHandler.Settings );
 				SettingsHandler.Save();
+				this.ApplyViewPreferences(SettingsHandler.Settings.viewSettings);
 			}			
 			dialog.Destroy();
 		}

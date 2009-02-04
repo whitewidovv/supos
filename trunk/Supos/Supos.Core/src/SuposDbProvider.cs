@@ -88,7 +88,6 @@ namespace Supos.Core
 			default :
 				break;
 			}
-				
 			connection = ProviderFactory.CreateConnection(constr);
 			CreateAdapters();
 		}
