@@ -137,6 +137,41 @@ namespace SuposUser
 			this.ResetRcStyles();
 		}
 		
+		private void Connect()
+		{
+			if( database == null) {
+				try {
+					database = new SuposDb(SettingsHandler.Settings.dbSettings);
+					database.Fill();
+				} catch (Exception e) {
+					DialogError dlg = new DialogError( "Error while connecting/loading",e, this);
+					dlg.Run();
+					dlg.Destroy();
+					Disconnect();
+					return;
+				}
+				catview.DataSource=database;
+				catview.SelectFrist();
+				prodview.DataSource = database;
+				orderview.DataSource = database;
+				mainPaned.Sensitive = true;
+				actgroup.GetAction("connect").Sensitive=false;
+				actgroup.GetAction("disconnect").Sensitive=true;
+			}
+		}
+		
+		private void Disconnect()
+		{
+			if( database != null) {
+				database = null;
+				catview.DataSource = null;
+				prodview.DataSource = null;
+				orderview.DataSource = null;
+				mainPaned.Sensitive = false;
+				actgroup.GetAction("connect").Sensitive=true;
+				actgroup.GetAction("disconnect").Sensitive=false;
+			}
+		}
 		
 		// Callbacks
 		protected void OnQuit (object obj, EventArgs args)
@@ -175,30 +210,12 @@ namespace SuposUser
 		
 		protected void OnConnect (object obj, EventArgs args)
 		{
-			if( database == null) {
-				database = new SuposDb(SettingsHandler.Settings.dbSettings);
-				database.Fill();
-				catview.DataSource=database;
-				catview.SelectFrist();
-				prodview.DataSource = database;
-				orderview.DataSource = database;
-				mainPaned.Sensitive = true;
-				actgroup.GetAction("connect").Sensitive=false;
-				actgroup.GetAction("disconnect").Sensitive=true;
-			}
+			Connect();
 		}
 		
 		protected void OnDisconnect (object obj, EventArgs args)
 		{
-			if( database != null) {
-				database = null;
-				catview.DataSource = null;
-				prodview.DataSource = null;
-				orderview.DataSource = null;
-				mainPaned.Sensitive = false;
-				actgroup.GetAction("connect").Sensitive=true;
-				actgroup.GetAction("disconnect").Sensitive=false;
-			}
+			Disconnect();
 		}
 		
 		protected void OnDeleteEvent (object sender, DeleteEventArgs a)
