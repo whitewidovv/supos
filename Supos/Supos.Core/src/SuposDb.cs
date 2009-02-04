@@ -13,6 +13,7 @@ namespace Supos.Core
 	
 	public class SuposDb
 	{
+		// TODO: static or not (GetMedia??)
 		private SuposDbProvider provider;
 		private SuposDataSet ds;
 		static private DbSettings settings;
@@ -23,16 +24,6 @@ namespace Supos.Core
 			ds = new SuposDataSet();
 			provider = new SuposDbProvider(config);
 		}
-		
-//		public SuposDbProvider Provider
-//		{
-//			get { return provider; }
-//			set
-//			{
-//				//TODO: si changement de provider! (fermer connection, vider dataset...)
-//				provider = value;
-//			}
-//		}
 		
 		public SuposDataSet DataSet
 		{
