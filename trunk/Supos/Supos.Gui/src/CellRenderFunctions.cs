@@ -34,7 +34,7 @@ namespace Supos
 			DataRow row = (DataRow)tree_model.GetValue(iter, 0);
 			if(row != null)
 			{
-				byte[] icon = Util.GetMedia( row["icon"].ToString() );
+				byte[] icon = SuposDb.GetMedia( row["icon"].ToString() );
 				if ( icon != null )
 					pix.Pixbuf = new Gdk.Pixbuf( icon ).ScaleSimple(iconsize, iconsize, Gdk.InterpType.Bilinear);
 				else

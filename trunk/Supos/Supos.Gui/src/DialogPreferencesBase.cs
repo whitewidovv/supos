@@ -6,6 +6,7 @@
 
 using System;
 using Gtk;
+using Supos.Core;
 
 namespace Supos.Gui
 {
@@ -28,14 +29,14 @@ namespace Supos.Gui
 			this.ShowAll();
 		}
 		
-		public void SetDatabaseSettingsFromConfig(string confstring)
+		public void LoadDatabaseSettings(DbSettings config)
 		{
-			dbForm.SetFromConfig(confstring);
+			dbForm.LoadSettings(config);
 		}
 		
-		public string GetDatabaseConfig()
+		public void ApplyDatabaseSettings(DbSettings config)
 		{
-			return dbForm.GetConfig();
+			dbForm.ApplySettings(config);
 		}
 		
 	}

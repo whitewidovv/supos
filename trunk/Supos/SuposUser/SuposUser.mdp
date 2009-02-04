@@ -1,4 +1,4 @@
-<Project name="SuposUser" fileversion="2.0" language="C#" clr-version="Net_2_0" ctype="DotNetProject">
+<Project name="SuposUser" fileversion="2.0" DefaultNamespace="SuposUset" language="C#" clr-version="Net_2_0" ctype="DotNetProject">
   <Configurations active="Debug">
     <Configuration name="Debug" ctype="DotNetProjectConfiguration">
       <Output directory="bin/Debug" assemblyKeyFile="." assembly="SuposUser" />
@@ -19,6 +19,7 @@
     <File name="src/MainWindow.cs" subtype="Code" buildaction="Compile" />
     <File name="src/AssemblyInfo.cs" subtype="Code" buildaction="Compile" />
     <File name="SuposUser.exe.config" subtype="Code" buildaction="FileCopy" DeployService.TargetDirectoryId="ProgramFiles" Gettext.ScanForTranslations="False" />
+    <File name="src/Settings.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
@@ -32,5 +33,6 @@
     <ProjectReference type="Project" localcopy="True" refto="Supos.Core" />
     <ProjectReference type="Gac" localcopy="True" refto="System.Data, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <ProjectReference type="Project" localcopy="True" refto="Supos.Gui" />
+    <ProjectReference type="Gac" localcopy="True" refto="System.Xml, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   </References>
 </Project>
