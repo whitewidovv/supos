@@ -13,26 +13,6 @@ namespace Supos.Core
 	
 	public static class Util
 	{
-		
-		static public byte[] GetMedia( string Media )
-		{
-			string path = System.Configuration.ConfigurationManager.AppSettings["MediaPath"];
-			if( path.EndsWith("/") )
-			{
-				path = path + Media;
-			}
-			else {
-				path = path + "/" + Media;
-			}
-			
-			if (File.Exists(path) )
-			{
-				byte[] file = File.ReadAllBytes( path );			 
-				return file;
-			}
-			else return null;
-		}
-
 		static public void DumpDataSet(DataSet ds)
 		{
 			foreach( DataTable tab in ds.Tables)

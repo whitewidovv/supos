@@ -7,6 +7,7 @@
 using System;
 using System.Text.RegularExpressions;
 using Gtk;
+using Supos.Core;
 
 namespace Supos.Gui
 {
@@ -16,13 +17,11 @@ namespace Supos.Gui
 	{
 		private Label typeLabel, serverLabel, portLabel, userLabel, passLabel, dbLabel, mediaLabel;
 		private ComboBox typeCombo;
-		private Entry serverEntry, portEntry, userEntry, passEntry, dbEntry, mediaEntry;
+		private Entry serverEntry, userEntry, passEntry, dbEntry;
+		private SpinButton portSpinButton;
 		private CheckButton passCheck;
-		private Button dbButton, mediaButton;
-		
-		static private Regex configrex = new Regex(@"factory=(?<factory>[^;]*);(?<constr>[^$]*)");
-		//static private Regex pgrex = new Regex(@"Server=(?<server>[^;]*);Port=(?<port>[^;]*);User ID=(?<user>[^;]*);Password=(?<pass>[^;]*);Database=(?<database>[^;]*)");
-		static private Regex sqliterex = new Regex(@"Data Source=(?<datasource>[^$]*)");
+		private Button dbButton;
+		private FileChooserButton mediaButton;
 		
 		public FormDatabasePreferences() : base(7, 3, false)
 		{	
@@ -35,14 +34,13 @@ namespace Supos.Gui
 			mediaLabel = new Gtk.Label("Medias path :");
 			typeCombo = ComboBox.NewText();
 			serverEntry = new Entry();
-			portEntry = new Entry();
+			portSpinButton = new SpinButton(0f,65536f,1f);
 			userEntry = new Entry();
 			passEntry = new Entry();
 			dbEntry = new Entry();
-			mediaEntry = new Entry();
 			passCheck = new CheckButton("Save password");
 			dbButton= new Button(Stock.Open);
-			mediaButton= new Button(Stock.Open);
+			mediaButton= new FileChooserButton("Choose the media directory", FileChooserAction.SelectFolder);
 						
 			typeLabel.SetAlignment(0, (float)0.5);
 			serverLabel.SetAlignment(0, (float)0.5);
@@ -56,6 +54,9 @@ namespace Supos.Gui
 			typeCombo.AppendText("PostgreSQL");
 			typeCombo.Changed += OnTypeComboChanged;
 			
+			passEntry.Visibility = false;
+			dbButton.Clicked += OnDbButton; 
+			
 			this.Attach(typeLabel, 0, 1, 0, 1);
 			this.Attach(serverLabel, 0, 1, 1, 2);
 			this.Attach(portLabel, 0, 1, 2, 3);
@@ -67,50 +68,37 @@ namespace Supos.Gui
 			this.Attach(typeCombo, 1, 3, 0, 1);
 			
 			this.Attach(serverEntry, 1, 3, 1, 2);
-			this.Attach(portEntry, 1, 3, 2, 3);
+			this.Attach(portSpinButton, 1, 3, 2, 3);
 			this.Attach(userEntry, 1, 3, 3, 4);
 			this.Attach(passEntry, 1, 2, 4, 5);
 			this.Attach(dbEntry, 1, 2, 5, 6);
-			this.Attach(mediaEntry, 1, 2, 6, 7);
 			
 			this.Attach(passCheck, 2, 3, 4, 5);			
 			this.Attach(dbButton, 2, 3, 5, 6);		
-			this.Attach(mediaButton, 2, 3, 6, 7);
+			this.Attach(mediaButton, 1, 3, 6, 7);
 			
 		}
 		
-		public void SetFromConfig(string confstring)
+		public void LoadSettings( DbSettings config)
 		{
-			if ( configrex.IsMatch(confstring) )
-			{
-				Match confmatch = configrex.Match(confstring);
-				if (confmatch.Groups["factory"] != null)
-				{
-					switch( confmatch.Groups["factory"].Value ) {
-					case "Sqlite" :
-						TypeComboSetActive("SQLite");
-						if( sqliterex.IsMatch(confmatch.Groups["constr"].Value) ) {
-							Match constrmatch = sqliterex.Match(confmatch.Groups["constr"].Value);
-							if( constrmatch.Groups["datasource"] != null) {
-								dbEntry.Text = constrmatch.Groups["datasource"].Value;
-							}
-						}
-						break;
-					case "Npgsql" :
-						TypeComboSetActive("PostgreSQL");
-						//TODO other fields
-						break;
-					default :
-						break;
-						
-					}
-				}
-			}
+			TypeComboSetActive( config.DbType );
+			serverEntry.Text = config.Server;
+			portSpinButton.Value = config.Port;
+			userEntry.Text = config.User;
+			passEntry.Text = config.Password;
+			dbEntry.Text = config.Database;
+			mediaButton.SetCurrentFolder( config.MediaPath );
 		}
 		
-		public string GetConfig()
+		public void ApplySettings(DbSettings config)
 		{
-			return "";
+			config.DbType = typeCombo.ActiveText;
+			config.Server = serverEntry.Text;
+			config.Port = portSpinButton.ValueAsInt;
+			config.User = userEntry.Text;
+			config.Password = passEntry.Text;
+			config.Database = dbEntry.Text;
+			config.MediaPath = mediaButton.CurrentFolder;
 		}
 		
 		private void TypeComboSetActive(string active)
@@ -126,6 +114,20 @@ namespace Supos.Gui
 			while (typeCombo.Model.IterNext(ref iter) );
 		}
 		
+		private void OnDbButton(object sender, EventArgs e)
+		{
+			FileChooserDialog dlg = new FileChooserDialog("Choose the file to open",
+                                      null,
+                                      FileChooserAction.Open,
+                                      "Cancel",ResponseType.Cancel,
+                                      "Open",ResponseType.Accept);
+			if( dlg.Run() == (int)ResponseType.Accept )
+			{
+				dbEntry.Text = dlg.Filename;
+			}
+			dlg.Destroy();
+		}
+
 		private void OnTypeComboChanged (object sender, EventArgs e)
 		{
 			string selected = ((ComboBox)sender).ActiveText;
@@ -133,7 +135,7 @@ namespace Supos.Gui
 			case "SQLite" :
 				dbButton.Sensitive = true;
 				serverEntry.Sensitive = false;
-				portEntry.Sensitive = false;
+				portSpinButton.Sensitive = false;
 				userEntry.Sensitive = false;
 				passEntry.Sensitive = false;
 				passCheck.Sensitive = false;
@@ -141,7 +143,7 @@ namespace Supos.Gui
 			case "PostgreSQL" :
 				dbButton.Sensitive = false;
 				serverEntry.Sensitive = true;
-				portEntry.Sensitive = true;
+				portSpinButton.Sensitive = true;
 				userEntry.Sensitive = true;
 				passEntry.Sensitive = true;
 				passCheck.Sensitive = true;

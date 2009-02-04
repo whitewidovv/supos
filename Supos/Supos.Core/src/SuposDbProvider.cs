@@ -63,9 +63,33 @@ namespace Supos.Core
 			get { return metaAdapter; }
 		}
 		
-		public SuposDbProvider()
+		public SuposDbProvider(DbSettings config)
 		{
-			connection = ProviderFactory.CreateConnectionFromConfig("ConnStr");
+			string constr = "factory=";
+			switch(config.DbType) {
+			case "SQLite" :
+				constr += "Sqlite;";
+				constr += "Data Source=";
+				constr += config.Database;
+				break;
+			case "PostgreSQL" :
+				constr += "Npgsql;";
+				constr += "Server=";
+				constr += config.Server;
+				constr += ";Port=";
+				constr += config.Port;
+				constr += ";User ID=";
+				constr += config.User;
+				constr += ";Password=";
+				constr += config.Password;
+				constr += ";Database=";
+				constr += config.Database;
+				break;
+			default :
+				break;
+			}
+				
+			connection = ProviderFactory.CreateConnection(constr);
 			CreateAdapters();
 		}
 

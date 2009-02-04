@@ -5,6 +5,7 @@
 //
 
 using System;
+using System.IO;
 
 namespace Supos.Core
 {
@@ -14,21 +15,24 @@ namespace Supos.Core
 	{
 		private SuposDbProvider provider;
 		private SuposDataSet ds;
+		static private DbSettings settings;
 		
-		public SuposDb()
+		public SuposDb( DbSettings config )
 		{ 
+			settings = config;
 			ds = new SuposDataSet();
+			provider = new SuposDbProvider(config);
 		}
 		
-		public SuposDbProvider Provider
-		{
-			get { return provider; }
-			set
-			{
-				//TODO: si changement de provider! (fermer connection, vider dataset...)
-				provider = value;
-			}
-		}
+//		public SuposDbProvider Provider
+//		{
+//			get { return provider; }
+//			set
+//			{
+//				//TODO: si changement de provider! (fermer connection, vider dataset...)
+//				provider = value;
+//			}
+//		}
 		
 		public SuposDataSet DataSet
 		{
@@ -38,6 +42,17 @@ namespace Supos.Core
 		public void Fill()
 		{
 			provider.Fill(ds);
+		}
+		
+		static public byte[] GetMedia( string media )
+		{
+			string path = Path.Combine(settings.MediaPath, media);
+			if (File.Exists(path) )
+			{
+				byte[] file = File.ReadAllBytes( path );			 
+				return file;
+			}
+			else return null;
 		}
 		
 		public SuposDataSet.OrdersRow NewOrder()

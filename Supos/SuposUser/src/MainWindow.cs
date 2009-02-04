@@ -22,6 +22,8 @@ namespace SuposUser
 		private ViewNameIcon prodview;
 		private ViewOrderEdit orderview;
 		
+		private bool fullscreen = false;
+		
 		private SuposDb database;
 		
 		public MainWindow (): base (Gtk.WindowType.Toplevel)
@@ -46,7 +48,7 @@ namespace SuposUser
 			mainPaned = new HPaned();
 			mainPaned.Sensitive = false;
 			mainPaned.Name = "toucharea";			
-			mainBox.PackStart(mainPaned, false, false, 0);
+			mainBox.PackStart(mainPaned, true, true, 0);
 			// order editing view
 			orderview = new ViewOrderEdit();
 			mainPaned.Add2(orderview);
@@ -86,12 +88,18 @@ namespace SuposUser
 			ActionEntry[] entries = new ActionEntry[] {
 				new ActionEntry ("FileMenuAction", null, "_File", null, null, null),
 				new ActionEntry ("EditMenuAction", null, "_Edit", null, null, null),
+				new ActionEntry ("ViewMenuAction", null, "_View", null, null, null),
 				new ActionEntry ("HelpMenuAction", null, "_Help", null, null, null),
+				// File
 				new ActionEntry ("connect", Stock.Connect, null, "<control>C", "Connect to Database", new EventHandler (OnConnect)),
 				new ActionEntry ("disconnect", Stock.Disconnect, null, "<control>D", "Disconnect from Database", new EventHandler (OnDisconnect)),
 				new ActionEntry ("quit", Stock.Quit, null, "<control>Q", "Quit the application", new EventHandler (OnQuit)),
+				// Edit
 				new ActionEntry ("preferences", Stock.Preferences, null, "<control>P", "Set application preferences", new EventHandler (OnPreferences)),
-				new ActionEntry ("about", Stock.About, null, "<control>A", "Information about the application", new EventHandler (OnPreferences)),
+				// View
+				new ActionEntry ("fullscreen", Stock.Fullscreen, null, "<control>F", "Go fullscreen", new EventHandler (OnFullScreen)),
+				// Help
+				new ActionEntry ("about", Stock.About, null, "<control>A", "Information about the application", new EventHandler (OnAbout)),
 			};
 			actgroup.Add (entries);
 		}
@@ -109,6 +117,9 @@ namespace SuposUser
 			"    </menu>\n" +
 			"    <menu name=\"edit\" action=\"EditMenuAction\">\n" +
 			"      <menuitem name=\"preferences\" action=\"preferences\" />\n" +
+			"    </menu>\n" +
+			"    <menu name=\"view\" action=\"ViewMenuAction\">\n" +
+			"      <menuitem name=\"fullscreen\" action=\"fullscreen\" />\n" +
 			"    </menu>\n" +
 			"    <menu name=\"help\" action=\"HelpMenuAction\">\n" +
 			"      <menuitem name=\"about\" action=\"about\" />\n" +
@@ -136,19 +147,36 @@ namespace SuposUser
 		protected void OnPreferences (object obj, EventArgs args)
 		{
 			DialogPreferencesBase dialog = new DialogPreferencesBase(this);
-			dialog.SetDatabaseSettingsFromConfig( System.Configuration.ConfigurationManager.AppSettings["ConnStr"] );
+			dialog.LoadDatabaseSettings( SettingsHandler.Settings.dbSettings );
 			int result = dialog.Run();
 			if( result == (int)ResponseType.Ok)
 			{
+				dialog.ApplyDatabaseSettings( SettingsHandler.Settings.dbSettings );
+				SettingsHandler.Save();
 			}			
 			dialog.Destroy();
+		}
+		
+		protected void OnAbout (object obj, EventArgs args)
+		{
+		}
+		
+		protected void OnFullScreen (object obj, EventArgs args)
+		{
+			if(this.fullscreen) {
+				this.Unfullscreen();
+				this.fullscreen = false;
+			}
+			else {
+				this.Fullscreen();
+				this.fullscreen = true;
+			}
 		}
 		
 		protected void OnConnect (object obj, EventArgs args)
 		{
 			if( database == null) {
-				database = new SuposDb();
-				database.Provider = new SuposDbProvider();
+				database = new SuposDb(SettingsHandler.Settings.dbSettings);
 				database.Fill();
 				catview.DataSource=database;
 				catview.SelectFrist();
@@ -163,7 +191,6 @@ namespace SuposUser
 		protected void OnDisconnect (object obj, EventArgs args)
 		{
 			if( database != null) {
-				database.Provider = null;
 				database = null;
 				catview.DataSource = null;
 				prodview.DataSource = null;
