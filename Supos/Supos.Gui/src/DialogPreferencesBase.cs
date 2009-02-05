@@ -11,7 +11,6 @@ using Supos.Core;
 namespace Supos.Gui
 {
 	
-	
 	public class DialogPreferencesBase : Gtk.Dialog
 	{
 		protected Notebook notebook;
