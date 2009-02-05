@@ -86,7 +86,7 @@ namespace Supos.Gui
 			if( filtercol.Length < 1)
 				return true;
 			DataRow row = model.GetValue(iter, 0) as DataRow;
-			if( row==null )
+			if( row==null || row.RowState == DataRowState.Deleted || row.RowState == DataRowState.Detached  )
 				return true;
 			string val = row[filtercol].ToString();
 			if( val.CompareTo(filterval) == 0 )
